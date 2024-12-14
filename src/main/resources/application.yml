@@ -1,0 +1,11 @@
+server.port: 8080
+spring:
+  application.name: fleetlens-api
+  datasource:
+    url: jdbc:mariadb://host.docker.internal:3306/db_fleetlens
+    username: root
+    password: root
+    driver-class-name: org.mariadb.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update

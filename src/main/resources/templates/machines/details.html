@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Machine Details - FleetLens</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+<!-- Navbar -->
+<nav class="bg-blue-600 text-white p-4 flex justify-between items-center">
+    <div class="text-xl font-bold">FleetLens</div>
+    <div>
+        <a th:href="@{/users}" class="hover:text-blue-200">Users</a>
+        <a th:href="@{/tokens}" class="mr-4 hover:text-blue-200">Token</a>
+        <a th:href="@{/dashboard}" class="hover:text-blue-200">Dashboard</a>
+    </div>
+</nav>
+
+<!-- Machine Details Section -->
+<div class="container mx-auto mt-6 p-6 bg-white shadow-md rounded">
+    <h2 class="text-2xl font-bold mb-4">Machine Details</h2>
+    <div class="space-y-4">
+        <p><strong>Hostname:</strong> <span th:text="${machine.hostname}"></span></p>
+        <p><strong>IP Address:</strong> <span th:text="${machine.ipAddressV4}"></span></p>
+        <p><strong>Operating System:</strong> <span th:text="${machine.operatingSystem}"></span></p>
+        <p><strong>Architecture:</strong> <span th:text="${machine.architecture}"></span></p>
+    </div>
+
+    <hr class="my-6">
+
+    <!-- Accounts Section -->
+    <div class="space-y-4">
+        <h3 class="text-xl font-semibold">Accounts</h3>
+        <div th:each="account : ${accounts}" class="p-4 bg-gray-50 rounded shadow">
+            <p><strong>Username:</strong> <span th:text="${account.username}"></span></p>
+            <p><strong>Root:</strong> <span th:text="${account.isRoot ? 'Yes' : 'No'}"></span></p>
+        </div>
+    </div>
+
+    <hr class="my-6">
+
+    <!-- System Groups Section -->
+    <div class="space-y-4">
+        <h3 class="text-xl font-semibold">System Groups</h3>
+        <div th:each="group : ${systemGroups}" class="p-4 bg-gray-50 rounded shadow">
+            <p><strong>Group Name:</strong> <span th:text="${group.name}"></span></p>
+            <p><strong>Members:</strong></p>
+            <ul class="list-disc pl-6">
+                <li th:each="account : ${group.members}">
+                    <span th:text="${account.username}"></span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <hr class="my-6">
+
+    <!-- Software Section -->
+    <div class="space-y-4">
+        <h3 class="text-xl font-semibold">Software Installed</h3>
+        <div th:each="software : ${softwares}" class="p-4 bg-gray-50 rounded shadow">
+            <p><strong>Package Name:</strong> <span th:text="${software.packageName}"></span></p>
+            <p><strong>Package Version:</strong> <span th:text="${software.packageVersion}"></span></p>
+        </div>
+    </div>
+
+    <a th:href="@{/dashboard}" class="mt-6 text-blue-500 hover:underline">Back to Dashboard</a>
+</div>
+
+</body>
+</html>
