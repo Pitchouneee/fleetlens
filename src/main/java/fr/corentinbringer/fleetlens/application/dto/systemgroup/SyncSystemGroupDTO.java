@@ -1,5 +1,6 @@
 package fr.corentinbringer.fleetlens.application.dto.systemgroup;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,8 +12,10 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SystemGroupDTO {
+public class SyncSystemGroupDTO {
 
+    @NotBlank
     private String name;
+
     private List<String> members;
 }

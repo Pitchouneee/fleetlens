@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>FleetLens</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 flex h-screen">
+
+<!--Objectif : Liste détaillée des machines et possibilité de filtrer/rechercher.-->
+
+<!--Contenu :-->
+<!--Filtres :-->
+
+<!--Recherche par nom de machine (champ texte).-->
+<!--Recherche par OS (Linux, Ubuntu, etc., via dropdown).-->
+<!--Recherche par IP.-->
+<!--Recherche par état (actif/inactif).-->
+<!--Affichage des machines :-->
+
+<!--Grille (comme actuellement) ou vue liste (toggle pour basculer entre les deux).-->
+<!--Chaque machine affichera :-->
+<!--Nom.-->
+<!--IP.-->
+<!--OS.-->
+<!--Nombre de CVE critiques.-->
+<!--Tri :-->
+
+<!--Par nom, IP, OS, nombre de CVE.-->
+
+<!-- Sidebar -->
+<div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+<!-- Main Content Container -->
+<div class="flex flex-col flex-1">
+    <!-- Header -->
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <!-- Main Content -->
+    <div class="flex-1 p-6 overflow-auto">
+        <!-- Filtering Section -->
+        <div class="container mx-auto mt-6 p-4 bg-white shadow-md rounded">
+            <form th:action="@{/dashboard/filter}" method="post" class="flex space-x-4">
+                <input type="text" name="machineName" placeholder="Machine Name" class="flex-1 p-2 border rounded">
+                <input type="text" name="packageName" placeholder="Package Name" class="flex-1 p-2 border rounded">
+                <button type="submit" class="bg-blue-500 text-white p-2 rounded">Filter</button>
+            </form>
+        </div>
+
+        <!-- Toggle View -->
+        <div class="container mx-auto mt-4 flex justify-end">
+            <button id="toggleView" class="bg-gray-300 p-2 rounded">Switch to List View</button>
+        </div>
+
+        <!-- Machines Display -->
+        <div id="machines-container" class="container mx-auto mt-6">
+            <!-- Card View -->
+            <div id="card-view" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div th:each="machine : ${machines}" class="bg-white p-4 shadow-md rounded hover:shadow-lg transition">
+                    <h3 class="text-lg font-bold mb-2" th:text="${machine.hostname}"></h3>
+                    <p>IP: <span th:text="${machine.ipAddressV4}"></span></p>
+                    <p>OS: <span th:text="${machine.operatingSystem}"></span></p>
+                    <a th:href="@{/machines/{id}(id=${machine.id})}" class="mt-2 block text-blue-500 hover:underline">View Details</a>
+                </div>
+            </div>
+
+            <!-- List View -->
+            <div id="list-view" class="hidden">
+                <table class="table-auto w-full bg-white shadow-md rounded">
+                    <thead class="bg-blue-500 text-white">
+                    <tr>
+                        <th class="px-4 py-2">Hostname</th>
+                        <th class="px-4 py-2">IP Address</th>
+                        <th class="px-4 py-2">Operating System</th>
+                        <th class="px-4 py-2">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="machine : ${machines}" class="hover:bg-gray-100">
+                        <td class="border px-4 py-2" th:text="${machine.hostname}"></td>
+                        <td class="border px-4 py-2" th:text="${machine.ipAddressV4}"></td>
+                        <td class="border px-4 py-2" th:text="${machine.operatingSystem}"></td>
+                        <td class="border px-4 py-2">
+                            <a th:href="@{/machines/{id}(id=${machine.id})}" class="text-blue-500 hover:underline">View Details</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            <div class="mt-4">
+                <ul class="flex justify-center">
+                    <li>
+                        <a th:href="@{/dashboard?page={prevPage}&size=12(prevPage=${prevPage})}"
+                           class="px-4 py-2 bg-blue-500 text-white rounded-l"
+                           th:classappend="${currentPage == 0} ? 'opacity-50 cursor-not-allowed' : ''"
+                           th:if="${currentPage > 0}">Prev</a>
+                    </li>
+                    <li>
+                        <a th:href="@{/dashboard?page={nextPage}&size=12(nextPage=${nextPage})}"
+                           class="px-4 py-2 bg-blue-500 text-white rounded-r"
+                           th:classappend="${currentPage == totalPages - 1} ? 'opacity-50 cursor-not-allowed' : ''"
+                           th:if="${currentPage < totalPages - 1}">Next</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('toggleView').addEventListener('click', function() {
+    const cardView = document.getElementById('card-view');
+    const listView = document.getElementById('list-view');
+
+    if (cardView.classList.contains('hidden')) {
+        cardView.classList.remove('hidden');
+        listView.classList.add('hidden');
+        this.textContent = 'Switch to List View';
+    } else {
+        cardView.classList.add('hidden');
+        listView.classList.remove('hidden');
+        this.textContent = 'Switch to Card View';
+    }
+});
+</script>
+
+</body>
+</html>

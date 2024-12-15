@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="sidebar" class="bg-blue-600 text-white w-64 min-h-screen p-4">
+    <div class="text-xl font-bold mb-4">FleetLens</div>
+    <nav>
+        <a th:href="@{/dashboard}" class="block py-2 hover:bg-blue-700 rounded">Dashboard</a>
+        <a th:href="@{/machines}" class="block py-2 hover:bg-blue-700 rounded">Machines</a>
+        <a th:href="@{/softwares}" class="block py-2 hover:bg-blue-700 rounded">Software</a>
+        <a th:href="@{/accounts}" class="block py-2 hover:bg-blue-700 rounded">Accounts</a>
+        <a th:href="@{/cves}" class="block py-2 hover:bg-blue-700 rounded">CVE</a>
+        <a th:href="@{/tokens}" class="block py-2 hover:bg-blue-700 rounded">Tokens</a>
+    </nav>
+</div>
+</body>
+</html>
