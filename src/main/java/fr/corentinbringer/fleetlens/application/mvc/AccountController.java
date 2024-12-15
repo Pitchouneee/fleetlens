@@ -1,4 +1,4 @@
-package fr.corentinbringer.fleetlens.presentation.mvc.controller;
+package fr.corentinbringer.fleetlens.application.mvc;
 
 import fr.corentinbringer.fleetlens.application.dto.account.ListAccountDTO;
 import fr.corentinbringer.fleetlens.application.dto.account.ListAccountProjection;

@@ -1,4 +1,4 @@
-package fr.corentinbringer.fleetlens.synchronization.dto;
+package fr.corentinbringer.fleetlens.application.dto.synchronization;
 
 import fr.corentinbringer.fleetlens.application.dto.account.SyncAccountDTO;
 import fr.corentinbringer.fleetlens.application.dto.machine.SyncMachineDTO;

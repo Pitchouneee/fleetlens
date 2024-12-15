@@ -1,4 +1,4 @@
-package fr.corentinbringer.fleetlens.presentation.mvc.controller;
+package fr.corentinbringer.fleetlens.application.mvc;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;

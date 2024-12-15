@@ -1,4 +1,4 @@
-package fr.corentinbringer.fleetlens.presentation.mvc.controller;
+package fr.corentinbringer.fleetlens.application.mvc;
 
 import fr.corentinbringer.fleetlens.domain.model.Machine;
 import fr.corentinbringer.fleetlens.domain.service.MachineService;

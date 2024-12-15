@@ -1,4 +1,4 @@
-package fr.corentinbringer.fleetlens.synchronization.service;
+package fr.corentinbringer.fleetlens.domain.service;
 
 import fr.corentinbringer.fleetlens.domain.model.Account;
 import fr.corentinbringer.fleetlens.domain.model.Machine;
@@ -8,7 +8,7 @@ import fr.corentinbringer.fleetlens.domain.service.AccountService;
 import fr.corentinbringer.fleetlens.domain.service.MachineService;
 import fr.corentinbringer.fleetlens.domain.service.SoftwareService;
 import fr.corentinbringer.fleetlens.domain.service.SystemGroupService;
-import fr.corentinbringer.fleetlens.synchronization.dto.SyncRequest;
+import fr.corentinbringer.fleetlens.application.dto.synchronization.SyncRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

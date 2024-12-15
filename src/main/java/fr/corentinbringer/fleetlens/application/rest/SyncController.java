@@ -1,7 +1,7 @@
-package fr.corentinbringer.fleetlens.presentation.rest.controller;
+package fr.corentinbringer.fleetlens.application.rest;
 
-import fr.corentinbringer.fleetlens.synchronization.dto.SyncRequest;
-import fr.corentinbringer.fleetlens.synchronization.service.SyncService;
+import fr.corentinbringer.fleetlens.application.dto.synchronization.SyncRequest;
+import fr.corentinbringer.fleetlens.domain.service.SyncService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

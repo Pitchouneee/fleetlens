@@ -1,4 +1,4 @@
-package fr.corentinbringer.fleetlens.configuration;
+package fr.corentinbringer.fleetlens.infrastructure.configuration;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
