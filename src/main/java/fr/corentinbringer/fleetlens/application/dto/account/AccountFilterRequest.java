@@ -1,6 +1,6 @@
 package fr.corentinbringer.fleetlens.application.dto.account;
 
-import jakarta.validation.constraints.NotBlank;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,10 +10,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SyncAccountDTO {
+public class AccountFilterRequest {
 
-    @NotBlank
     private String username;
-
-    private boolean root;
 }

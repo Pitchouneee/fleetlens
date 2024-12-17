@@ -1,14 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
-<header th:fragment="header" class="bg-white shadow-md p-4 flex justify-between items-center">
-    <!-- Global Search Bar -->
-    <div class="flex-1 mx-4">
-        <input type="text" placeholder="Search..." class="w-full p-2 border border-gray-300 rounded">
-    </div>
+<header th:fragment="header" class="bg-white shadow-md p-4 flex justify-end items-center">
     <!-- User Account and Logout -->
     <div class="flex items-center space-x-4">
         <a th:href="@{/account}" class="text-blue-600 hover:underline">My Account</a>
+        <a th:href="@{/administration}" class="text-blue-600 hover:underline">Administration</a>
         <button class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Logout</button>
     </div>
 </header>

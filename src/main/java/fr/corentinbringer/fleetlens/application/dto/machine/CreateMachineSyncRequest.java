@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class SyncMachineDTO {
+public class CreateMachineSyncRequest {
 
     @NotBlank
     private String hostname;

@@ -1,17 +1,17 @@
 package fr.corentinbringer.fleetlens.application.mvc;
 
-import fr.corentinbringer.fleetlens.application.dto.account.ListAccountDTO;
+import fr.corentinbringer.fleetlens.application.dto.account.AccountDetailsView;
+import fr.corentinbringer.fleetlens.application.dto.account.AccountFilterRequest;
 import fr.corentinbringer.fleetlens.application.dto.account.ListAccountProjection;
 import fr.corentinbringer.fleetlens.domain.service.AccountService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @Controller
 @RequiredArgsConstructor
@@ -23,10 +23,9 @@ public class AccountController {
     @GetMapping
     public String getAllAccounts(@RequestParam(defaultValue = "0") int page,
                                  @RequestParam(defaultValue = "12") int size,
+                                 @Valid @RequestParam(required = false) AccountFilterRequest filterRequest,
                                  Model model) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<ListAccountProjection> accountPage = accountService.findAll(pageable);
-//        Page<ListAccountDTO> accountPage = accountService.findAll(pageable);
+        Page<ListAccountProjection> accountPage = accountService.findAll(page, size, filterRequest);
 
         model.addAttribute("accounts", accountPage.getContent());
         model.addAttribute("currentPage", page);
@@ -35,5 +34,12 @@ public class AccountController {
         model.addAttribute("prevPage", page - 1 >= 0 ? page - 1 : page);
 
         return "accounts/list";
+    }
+
+    @GetMapping("/{accountId}")
+    public String getAccountDetails(@PathVariable UUID accountId, Model model) {
+        AccountDetailsView account = accountService.findAccountWithDetails(accountId);
+        model.addAttribute("account", account);
+        return "accounts/details";
     }
 }

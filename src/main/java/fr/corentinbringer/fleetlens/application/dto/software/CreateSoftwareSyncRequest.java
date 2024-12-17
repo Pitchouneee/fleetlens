@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SyncSoftwareDTO {
+public class CreateSoftwareSyncRequest {
 
     @NotBlank
     private String packageName;

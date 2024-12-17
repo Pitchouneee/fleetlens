@@ -24,9 +24,8 @@ public class Account {
     @Column(nullable = false)
     private boolean isRoot = false;
 
-    @ManyToOne
-    @JoinColumn(name = "machine_id", nullable = false)
-    private Machine machine;
+    @ManyToMany(mappedBy = "accounts", cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
+    private Set<Machine> machines = new HashSet<>();
 
     @ManyToMany(mappedBy = "members", cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
     private Set<SystemGroup> systemGroups = new HashSet<>();

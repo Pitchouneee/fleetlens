@@ -12,7 +12,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SyncSystemGroupDTO {
+public class CreateSystemGroupSyncRequest {
 
     @NotBlank
     private String name;

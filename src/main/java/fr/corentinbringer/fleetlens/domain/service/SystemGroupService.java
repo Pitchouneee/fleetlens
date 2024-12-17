@@ -1,8 +1,8 @@
 package fr.corentinbringer.fleetlens.domain.service;
 
+import fr.corentinbringer.fleetlens.domain.model.Machine;
 import fr.corentinbringer.fleetlens.domain.model.SystemGroup;
 import fr.corentinbringer.fleetlens.domain.repository.SystemGroupRepository;
-import fr.corentinbringer.fleetlens.domain.model.Machine;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

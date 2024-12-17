@@ -4,8 +4,6 @@ import fr.corentinbringer.fleetlens.domain.model.Machine;
 import fr.corentinbringer.fleetlens.domain.service.MachineService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,8 +24,7 @@ public class MachineController {
     public String getAllMachines(@RequestParam(defaultValue = "0") int page,
                                  @RequestParam(defaultValue = "12") int size,
                                  Model model) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Machine> machinePage = machineService.findAll(pageable);
+        Page<Machine> machinePage = machineService.findAll(page, size);
 
         model.addAttribute("machines", machinePage.getContent());
         model.addAttribute("currentPage", page);

@@ -1,3 +1,11 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>FleetLens</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 flex h-screen">
+
 <!--Objectif : Afficher tous les logiciels installés et les machines concernées.-->
 
 <!--Contenu :-->
@@ -14,3 +22,40 @@
 <!--Bouton "Voir Détails" pour :-->
 <!--Voir les machines avec ce logiciel.-->
 <!--Consulter les éventuelles CVE associées au logiciel.-->
+
+
+<!-- Sidebar -->
+<div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+<!-- Main Content Container -->
+<div class="flex flex-col flex-1">
+    <!-- Header -->
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <!-- Main Content -->
+    <div class="flex-1 p-6 overflow-auto">
+        <div class="container mx-auto mt-6">
+            <div class="bg-white p-6 rounded shadow-md">
+                <h1 class="text-2xl font-bold mb-4">Software list</h1>
+
+                <table class="table-auto w-full text-left border-collapse">
+                    <thead>
+                    <tr>
+                        <th class="border-b p-4">package name</th>
+                        <th class="border-b p-4">package version</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="software : ${softwares}">
+                        <td class="border-b p-4 truncate" th:text="${software.packageName}"></td>
+                        <td class="border-b p-4 truncate" th:text="${software.packageVersion}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

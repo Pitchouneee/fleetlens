@@ -1,9 +1,9 @@
 package fr.corentinbringer.fleetlens.application.dto.synchronization;
 
-import fr.corentinbringer.fleetlens.application.dto.account.SyncAccountDTO;
-import fr.corentinbringer.fleetlens.application.dto.machine.SyncMachineDTO;
-import fr.corentinbringer.fleetlens.application.dto.software.SyncSoftwareDTO;
-import fr.corentinbringer.fleetlens.application.dto.systemgroup.SyncSystemGroupDTO;
+import fr.corentinbringer.fleetlens.application.dto.account.CreateAccountSyncRequest;
+import fr.corentinbringer.fleetlens.application.dto.machine.CreateMachineSyncRequest;
+import fr.corentinbringer.fleetlens.application.dto.software.CreateSoftwareSyncRequest;
+import fr.corentinbringer.fleetlens.application.dto.systemgroup.CreateSystemGroupSyncRequest;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,8 +17,8 @@ import java.util.List;
 @AllArgsConstructor
 public class SyncRequest {
 
-    private SyncMachineDTO machine;
-    private List<SyncAccountDTO> accounts;
-    private List<SyncSystemGroupDTO> groups;
-    private List<SyncSoftwareDTO> software;
+    private CreateMachineSyncRequest machine;
+    private List<CreateAccountSyncRequest> accounts;
+    private List<CreateSystemGroupSyncRequest> groups;
+    private List<CreateSoftwareSyncRequest> software;
 }

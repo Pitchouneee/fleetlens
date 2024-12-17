@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -29,8 +30,13 @@ public class Machine {
     @Column
     private String architecture;
 
-    @OneToMany(mappedBy = "machine")
-    private Set<Account> accounts;
+    @ManyToMany
+    @JoinTable(
+            name = "account_machine",
+            joinColumns = @JoinColumn(name = "machine_id"),
+            inverseJoinColumns = @JoinColumn(name = "account_id")
+    )
+    private Set<Account> accounts = new HashSet<>();
 
     @OneToMany(mappedBy = "machine")
     private Set<SystemGroup> systemGroups;

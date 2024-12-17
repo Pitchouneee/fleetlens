@@ -39,10 +39,16 @@
     <div class="flex-1 p-6 overflow-auto">
         <!-- Filtering Section -->
         <div class="container mx-auto mt-6 p-4 bg-white shadow-md rounded">
-            <form th:action="@{/dashboard/filter}" method="post" class="flex space-x-4">
-                <input type="text" name="machineName" placeholder="Machine Name" class="flex-1 p-2 border rounded">
-                <input type="text" name="packageName" placeholder="Package Name" class="flex-1 p-2 border rounded">
-                <button type="submit" class="bg-blue-500 text-white p-2 rounded">Filter</button>
+            <form th:action="@{/machines}" method="post" class="flex">
+                <input type="text"
+                       name="machine"
+                       placeholder="Search a machine..."
+                       class="flex-1 p-2 border border-gray-300 rounded-l focus:ring-2 focus:ring-blue-500"
+                       th:value="${machine}"/>
+                <button type="submit"
+                        class="bg-blue-500 text-white px-4 py-2 rounded-r hover:bg-blue-600">
+                    Search
+                </button>
             </form>
         </div>
 
@@ -91,13 +97,13 @@
             <div class="mt-4">
                 <ul class="flex justify-center">
                     <li>
-                        <a th:href="@{/dashboard?page={prevPage}&size=12(prevPage=${prevPage})}"
+                        <a th:href="@{/machines?page={prevPage}&size=12(prevPage=${prevPage})}"
                            class="px-4 py-2 bg-blue-500 text-white rounded-l"
                            th:classappend="${currentPage == 0} ? 'opacity-50 cursor-not-allowed' : ''"
                            th:if="${currentPage > 0}">Prev</a>
                     </li>
                     <li>
-                        <a th:href="@{/dashboard?page={nextPage}&size=12(nextPage=${nextPage})}"
+                        <a th:href="@{/machines?page={nextPage}&size=12(nextPage=${nextPage})}"
                            class="px-4 py-2 bg-blue-500 text-white rounded-r"
                            th:classappend="${currentPage == totalPages - 1} ? 'opacity-50 cursor-not-allowed' : ''"
                            th:if="${currentPage < totalPages - 1}">Next</a>
