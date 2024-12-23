@@ -11,32 +11,32 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/tokens")
-public class TokenController {
+@RequestMapping("/admin/tokens")
+public class AdminTokenController {
 
     private final TokenService tokenService;
 
     @GetMapping
     public String getAllTokens(Model model) {
         model.addAttribute("tokens", tokenService.getAllToken());
-        return "tokens/list";
+        return "admin/tokens/index";
     }
 
     @PostMapping("/create")
     public String createToken() {
         tokenService.createNewToken();
-        return "redirect:/tokens";
+        return "redirect:/admin/tokens";
     }
 
     @PostMapping("/{id}/delete")
     public String deleteToken(@PathVariable Long id) {
         tokenService.delete(id);
-        return "redirect:/tokens";
+        return "redirect:/admin/tokens";
     }
 
     @PostMapping("/{id}/revoke")
     public String revokeToken(@PathVariable Long id) {
         tokenService.revokeToken(id);
-        return "redirect:/tokens";
+        return "redirect:/admin/tokens";
     }
 }

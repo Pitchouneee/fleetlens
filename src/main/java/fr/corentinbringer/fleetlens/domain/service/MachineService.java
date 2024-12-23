@@ -1,14 +1,19 @@
 package fr.corentinbringer.fleetlens.domain.service;
 
+import fr.corentinbringer.fleetlens.application.dto.machine.MachineFilterRequest;
+import fr.corentinbringer.fleetlens.application.dto.machine.MachineListView;
 import fr.corentinbringer.fleetlens.domain.model.Machine;
 import fr.corentinbringer.fleetlens.domain.repository.MachineRepository;
+import fr.corentinbringer.fleetlens.domain.specification.MachineSpecification;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,6 +29,7 @@ import java.util.stream.Collectors;
 public class MachineService {
 
     private final MachineRepository machineRepository;
+    private final ModelMapper modelMapper;
 
     public Machine findById(UUID id) {
         Optional<Machine> machine = machineRepository.findById(id);
@@ -34,9 +40,13 @@ public class MachineService {
         return machineRepository.findByHostname(hostname).orElse(new Machine());
     }
 
-    public Page<Machine> findAll(int page, int size) {
+    public Page<MachineListView> findAll(int page, int size, MachineFilterRequest filterRequest) {
         Pageable pageable = PageRequest.of(page, size);
-        return machineRepository.findAll(pageable);
+        Specification<Machine> specification = MachineSpecification.filterBy(filterRequest);
+
+        return machineRepository.findAll(specification, pageable).map(machine ->
+                modelMapper.map(machine, MachineListView.class)
+        );
     }
 
     public void save(Machine machine) {

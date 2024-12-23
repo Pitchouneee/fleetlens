@@ -25,7 +25,7 @@ public class SystemGroup {
 
     @ManyToMany
     @JoinTable(
-            name = "system_group_user",
+            name = "tj_system_group_user",
             joinColumns = @JoinColumn(name = "system_group_id"),
             inverseJoinColumns = @JoinColumn(name = "system_user_id")
     )

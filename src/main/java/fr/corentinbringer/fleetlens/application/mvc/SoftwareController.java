@@ -1,7 +1,9 @@
 package fr.corentinbringer.fleetlens.application.mvc;
 
-import fr.corentinbringer.fleetlens.application.dto.software.ListSoftwareProjection;
+import fr.corentinbringer.fleetlens.application.dto.software.SoftwareFilterRequest;
+import fr.corentinbringer.fleetlens.application.dto.software.SoftwareListView;
 import fr.corentinbringer.fleetlens.domain.service.SoftwareService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -20,14 +22,16 @@ public class SoftwareController {
     @GetMapping
     public String getAllSoftware(@RequestParam(defaultValue = "0") int page,
                                  @RequestParam(defaultValue = "12") int size,
+                                 @Valid SoftwareFilterRequest filterRequest,
                                  Model model) {
-        Page<ListSoftwareProjection> softwarePage = softwareService.findDistinctSoftware(page, size);
+        Page<SoftwareListView> softwarePage = softwareService.getAllSoftwareWithVersion(page, size, filterRequest);
 
         model.addAttribute("softwares", softwarePage.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", softwarePage.getTotalPages());
         model.addAttribute("nextPage", page + 1 < softwarePage.getTotalPages() ? page + 1 : page);
         model.addAttribute("prevPage", page - 1 >= 0 ? page - 1 : page);
+        model.addAttribute("searchTerm", filterRequest.getSearchTerm());
 
         return "softwares/list";
     }

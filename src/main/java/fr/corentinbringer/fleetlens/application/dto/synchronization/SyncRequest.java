@@ -20,5 +20,5 @@ public class SyncRequest {
     private CreateMachineSyncRequest machine;
     private List<CreateAccountSyncRequest> accounts;
     private List<CreateSystemGroupSyncRequest> groups;
-    private List<CreateSoftwareSyncRequest> software;
+    private List<CreateSoftwareSyncRequest> softwares;
 }

@@ -4,21 +4,6 @@
     <title>Machine Details - FleetLens</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<!--Clique sur une machine pour afficher la page de détails :-->
-
-<!--Informations générales :-->
-<!--Nom de la machine.-->
-<!--IP.-->
-<!--OS et architecture.-->
-<!--Comptes :-->
-<!--Liste des utilisateurs (root, normal).-->
-<!--Groupes systèmes :-->
-<!--Groupes auxquels appartiennent les utilisateurs.-->
-<!--Logiciels installés :-->
-<!--Nom + version.-->
-<!--CVE associées :-->
-<!--Liste des vulnérabilités (ID, sévérité, description, date).-->
-
 <body class="bg-gray-100 flex h-screen">
 
 <!-- Sidebar -->
@@ -46,9 +31,9 @@
             <!-- Accounts Section -->
             <div class="space-y-4">
                 <h3 class="text-xl font-semibold">Accounts</h3>
-                <div th:each="account : ${accounts}" class="p-4 bg-gray-50 rounded shadow">
-                    <p><strong>Username:</strong> <span th:text="${account.username}"></span></p>
-                    <p><strong>Root:</strong> <span th:text="${account.isRoot ? 'Yes' : 'No'}"></span></p>
+                <div th:each="accountMachine : ${machine.accountMachines}" class="p-4 bg-gray-50 rounded shadow">
+                    <p><strong>Username:</strong> <span th:text="${accountMachine.account.username}"></span></p>
+                    <p><strong>Root:</strong> <span th:text="${accountMachine.isRoot ? 'Yes' : 'No'}"></span></p>
                 </div>
             </div>
 
@@ -57,12 +42,12 @@
             <!-- System Groups Section -->
             <div class="space-y-4">
                 <h3 class="text-xl font-semibold">System Groups</h3>
-                <div th:each="group : ${systemGroups}" class="p-4 bg-gray-50 rounded shadow">
+                <div th:each="group : ${machine.systemGroups}" class="p-4 bg-gray-50 rounded shadow">
                     <p><strong>Group Name:</strong> <span th:text="${group.name}"></span></p>
                     <p><strong>Members:</strong></p>
                     <ul class="list-disc pl-6">
-                        <li th:each="account : ${group.members}">
-                            <span th:text="${account.username}"></span>
+                        <li th:each="member : ${group.members}">
+                            <span th:text="${member.username}"></span>
                         </li>
                     </ul>
                 </div>
@@ -73,9 +58,9 @@
             <!-- Software Section -->
             <div class="space-y-4">
                 <h3 class="text-xl font-semibold">Software Installed</h3>
-                <div th:each="software : ${softwares}" class="p-4 bg-gray-50 rounded shadow">
-                    <p><strong>Package Name:</strong> <span th:text="${software.packageName}"></span></p>
-                    <p><strong>Package Version:</strong> <span th:text="${software.packageVersion}"></span></p>
+                <div th:each="softwareMachine : ${machine.softwareMachines}" class="p-4 bg-gray-50 rounded shadow">
+                    <p><strong>Package Name:</strong> <span th:text="${softwareMachine.software.packageName}"></span></p>
+                    <p><strong>Package Version:</strong> <span th:text="${softwareMachine.packageVersion}"></span></p>
                 </div>
             </div>
 

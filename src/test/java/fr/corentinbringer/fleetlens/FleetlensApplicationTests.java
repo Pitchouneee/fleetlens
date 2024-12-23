@@ -8,6 +8,6 @@ class FleetlensApplicationTests {
 
 	@Test
 	void contextLoads() {
-	}
 
+	}
 }

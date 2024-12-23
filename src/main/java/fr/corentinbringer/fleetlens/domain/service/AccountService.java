@@ -2,16 +2,19 @@ package fr.corentinbringer.fleetlens.domain.service;
 
 import fr.corentinbringer.fleetlens.application.dto.account.AccountDetailsView;
 import fr.corentinbringer.fleetlens.application.dto.account.AccountFilterRequest;
-import fr.corentinbringer.fleetlens.application.dto.account.ListAccountProjection;
+import fr.corentinbringer.fleetlens.application.dto.account.AccountListView;
 import fr.corentinbringer.fleetlens.domain.model.Account;
+import fr.corentinbringer.fleetlens.domain.model.Machine;
 import fr.corentinbringer.fleetlens.domain.model.SystemGroup;
 import fr.corentinbringer.fleetlens.domain.repository.AccountRepository;
+import fr.corentinbringer.fleetlens.domain.specification.AccountSpecification;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -27,10 +30,13 @@ public class AccountService {
         return accountRepository.findByUsername(username).orElse(new Account());
     }
 
-    public Page<ListAccountProjection> findAll(int page, int size, AccountFilterRequest filterRequest) {
+    public Page<AccountListView> findAll(int page, int size, AccountFilterRequest filterRequest) {
         Pageable pageable = PageRequest.of(page, size);
+        Specification<Account> specification = AccountSpecification.filterBy(filterRequest);
 
-        return accountRepository.findAllProjectedBy(pageable);
+        return accountRepository.findAll(specification, pageable).map(account ->
+                modelMapper.map(account, AccountListView.class)
+        );
     }
 
     public void save(Account account) {
@@ -45,8 +51,10 @@ public class AccountService {
         Account account = accountRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Account with provided UUID not found"));
 
-        List<AccountDetailsView.MachineDTO> machines = account.getMachines().stream()
-                .map(machine -> {
+        List<AccountDetailsView.MachineDTO> machines = account.getAccountMachines().stream()
+                .map(accountMachine -> {
+                    Machine machine = accountMachine.getMachine();
+
                     // Filter groups on the machine where the user is a member
                     List<String> relevantSystemGroups = machine.getSystemGroups().stream()
                             .filter(systemGroup -> systemGroup.getMembers().contains(account))
@@ -56,6 +64,7 @@ public class AccountService {
                     // Map the machine and add filtered groups
                     AccountDetailsView.MachineDTO machineDTO = modelMapper.map(machine, AccountDetailsView.MachineDTO.class);
                     machineDTO.setSystemGroups(relevantSystemGroups);
+                    machineDTO.setRoot(accountMachine.isRoot());
 
                     return machineDTO;
                 })

@@ -2,7 +2,7 @@ package fr.corentinbringer.fleetlens.application.mvc;
 
 import fr.corentinbringer.fleetlens.application.dto.account.AccountDetailsView;
 import fr.corentinbringer.fleetlens.application.dto.account.AccountFilterRequest;
-import fr.corentinbringer.fleetlens.application.dto.account.ListAccountProjection;
+import fr.corentinbringer.fleetlens.application.dto.account.AccountListView;
 import fr.corentinbringer.fleetlens.domain.service.AccountService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,15 +23,16 @@ public class AccountController {
     @GetMapping
     public String getAllAccounts(@RequestParam(defaultValue = "0") int page,
                                  @RequestParam(defaultValue = "12") int size,
-                                 @Valid @RequestParam(required = false) AccountFilterRequest filterRequest,
+                                 @Valid AccountFilterRequest filterRequest,
                                  Model model) {
-        Page<ListAccountProjection> accountPage = accountService.findAll(page, size, filterRequest);
+        Page<AccountListView> accountPage = accountService.findAll(page, size, filterRequest);
 
         model.addAttribute("accounts", accountPage.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", accountPage.getTotalPages());
         model.addAttribute("nextPage", page + 1 < accountPage.getTotalPages() ? page + 1 : page);
         model.addAttribute("prevPage", page - 1 >= 0 ? page - 1 : page);
+        model.addAttribute("username", filterRequest.getUsername());
 
         return "accounts/list";
     }

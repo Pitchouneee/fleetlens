@@ -18,15 +18,15 @@ public class Account {
     @GeneratedValue(generator = "uuid-hibernate-generator")
     private UUID id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String username;
 
-    @Column(nullable = false)
-    private boolean isRoot = false;
+    @OneToMany(mappedBy = "account", orphanRemoval = true)
+    private Set<AccountMachine> accountMachines = new HashSet<>();
 
-    @ManyToMany(mappedBy = "accounts", cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
-    private Set<Machine> machines = new HashSet<>();
-
-    @ManyToMany(mappedBy = "members", cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
+    @ManyToMany(mappedBy = "members", cascade = {
+            CascadeType.DETACH, CascadeType.MERGE,
+            CascadeType.PERSIST, CascadeType.REFRESH
+    })
     private Set<SystemGroup> systemGroups = new HashSet<>();
 }

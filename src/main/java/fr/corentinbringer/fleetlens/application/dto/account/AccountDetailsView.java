@@ -25,5 +25,6 @@ public class AccountDetailsView {
     public static class MachineDTO {
         private String hostname;
         private List<String> systemGroups;
+        private boolean isRoot;
     }
 }

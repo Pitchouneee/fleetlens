@@ -30,17 +30,12 @@ public class Machine {
     @Column
     private String architecture;
 
-    @ManyToMany
-    @JoinTable(
-            name = "account_machine",
-            joinColumns = @JoinColumn(name = "machine_id"),
-            inverseJoinColumns = @JoinColumn(name = "account_id")
-    )
-    private Set<Account> accounts = new HashSet<>();
+    @OneToMany(mappedBy = "machine", orphanRemoval = true)
+    private Set<AccountMachine> accountMachines = new HashSet<>();
 
     @OneToMany(mappedBy = "machine")
     private Set<SystemGroup> systemGroups;
 
     @OneToMany(mappedBy = "machine")
-    private Set<Software> softwares;
+    private Set<SoftwareMachine> softwareMachines = new HashSet<>();
 }

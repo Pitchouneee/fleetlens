@@ -1,7 +1,6 @@
 package fr.corentinbringer.fleetlens.domain.repository;
 
-import fr.corentinbringer.fleetlens.application.dto.software.ListSoftwareProjection;
-import fr.corentinbringer.fleetlens.domain.model.Machine;
+import fr.corentinbringer.fleetlens.application.dto.software.SoftwareListView;
 import fr.corentinbringer.fleetlens.domain.model.Software;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,11 +14,19 @@ import java.util.UUID;
 @Repository
 public interface SoftwareRepository extends JpaRepository<Software, UUID> {
 
-    @Query("""
-                SELECT DISTINCT s.packageName AS packageName, s.packageVersion AS packageVersion
-                FROM Software s
-            """)
-    Page<ListSoftwareProjection> findDistinctSoftware(Pageable pageable);
+    Optional<Software> findByPackageName(String packageName);
 
-    Optional<Software> findByPackageNameAndMachine(String packageName, Machine machine);
+    @Query("""
+            SELECT DISTINCT new fr.corentinbringer.fleetlens.application.dto.software.SoftwareListView(
+                s.id, s.packageName, sm.packageVersion, COUNT(DISTINCT sm.machine.id)
+            )
+            FROM Software s
+            JOIN s.softwareMachines sm
+            WHERE (:searchTerm IS NULL OR
+                   LOWER(s.packageName) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR
+                   LOWER(sm.packageVersion) LIKE LOWER(CONCAT('%', :searchTerm, '%'))
+            )
+            GROUP BY s.id, s.packageName, sm.packageVersion
+            """)
+    Page<SoftwareListView> findAllDistinctSoftwareWithVersion(Pageable pageable, String searchTerm);
 }

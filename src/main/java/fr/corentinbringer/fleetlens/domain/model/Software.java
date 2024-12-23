@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -16,13 +18,9 @@ public class Software {
     @GeneratedValue(generator = "uuid-hibernate-generator")
     private UUID id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String packageName;
 
-    @Column(nullable = false)
-    private String packageVersion;
-
-    @ManyToOne
-    @JoinColumn(name = "machine_id", nullable = false)
-    private Machine machine;
+    @OneToMany(mappedBy = "software")
+    private Set<SoftwareMachine> softwareMachines = new HashSet<>();
 }
