@@ -7,23 +7,6 @@
 </head>
 <body class="bg-gray-100 flex h-screen">
 
-<!--Objectif : Fournir un aperçu global du parc informatique avec des statistiques clés.-->
-
-<!--Contenu :-->
-<!--Statistiques générales :-->
-
-<!--Nombre total de machines.-->
-<!--Répartition des OS (Linux, Ubuntu, etc.).-->
-<!--Nombre total de comptes utilisateurs.-->
-<!--Liste des logiciels les plus installés (Top 5 avec pourcentage d'installation).-->
-<!--Nombre total de CVE détectées et leur sévérité (critique, haute, moyenne, faible).-->
-<!--Graphiques et visualisations :-->
-
-<!--Graphique circulaire : Répartition des systèmes d’exploitation.-->
-<!--Barres : Top 5 des logiciels installés.-->
-<!--Line Chart : Évolution des CVE dans le temps.-->
-<!--Tableau : Résumé des 5 machines les plus critiques (basé sur le nombre de CVE ou l’ancienneté des systèmes).-->
-
 <!-- Sidebar -->
 <div th:replace="~{fragments/sidebar :: sidebar}"></div>
 
@@ -46,14 +29,6 @@
                 <h3 class="font-semibold">Total accounts</h3>
                 <p class="text-xl" th:text="${totalAccounts}">0</p>
             </div>
-<!--            <div class="bg-white p-4 rounded shadow">-->
-<!--                <h3 class="font-semibold">Total CVEs</h3>-->
-<!--                <p class="text-xl" th:text="${cveStats.totalCVEs}">0</p>-->
-<!--            </div>-->
-<!--            <div class="bg-white p-4 rounded shadow">-->
-<!--                <h3 class="font-semibold">Critical CVEs</h3>-->
-<!--                <p class="text-xl" th:text="${cveStats.severityCounts['CRITICAL']}">0</p>-->
-<!--            </div>-->
         </div>
 
         <!-- Charts Section -->
@@ -63,18 +38,6 @@
                 <h3 class="font-semibold mb-4">OS Distribution</h3>
                 <canvas id="osChart"></canvas>
             </div>
-
-<!--            &lt;!&ndash; Top Software Bar Chart &ndash;&gt;-->
-<!--            <div class="bg-white p-4 rounded shadow">-->
-<!--                <h3 class="font-semibold mb-4">Top 5 Installed Software</h3>-->
-<!--                <canvas id="softwareChart"></canvas>-->
-<!--            </div>-->
-
-<!--            &lt;!&ndash; CVE Trend Line Chart &ndash;&gt;-->
-<!--            <div class="bg-white p-4 rounded shadow col-span-2">-->
-<!--                <h3 class="font-semibold mb-4">CVE Trends</h3>-->
-<!--                <canvas id="cveTrendChart"></canvas>-->
-<!--            </div>-->
         </div>
     </div>
 </div>

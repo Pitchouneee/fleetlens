@@ -3,7 +3,11 @@
 <body>
 <header th:fragment="header" class="bg-white shadow-md p-4 flex justify-end items-center">
     <div class="flex items-center space-x-4">
-        <button class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Logout</button>
+        <form th:action="@{/logout}" method="post" class="inline">
+            <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+                Logout
+            </button>
+        </form>
     </div>
 </header>
 </body>
