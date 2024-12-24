@@ -13,6 +13,23 @@ services:
       - "3306:3306"
     volumes:
       - mariadb_data:/var/lib/mysql
+  app-fleetlens:
+    container_name: app-fleetlens
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - DATASOURCE_URL=jdbc:mariadb://host.docker.internal:3306/db_fleetlens
+      - DATASOURCE_USERNAME=fleetlens_user
+      - DATASOURCE_PASSWORD=fleetlens_password
+    depends_on:
+      - mariadb
+    networks:
+      - fleetlens-network
 volumes:
   mariadb_data:
-    driver: local
+networks:
+  fleetlens-network:
+    driver: bridge

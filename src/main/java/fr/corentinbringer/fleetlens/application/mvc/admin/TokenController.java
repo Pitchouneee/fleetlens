@@ -1,4 +1,4 @@
-package fr.corentinbringer.fleetlens.application.mvc;
+package fr.corentinbringer.fleetlens.application.mvc.admin;
 
 import fr.corentinbringer.fleetlens.domain.service.TokenService;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/admin/tokens")
-public class AdminTokenController {
+public class TokenController {
 
     private final TokenService tokenService;
 

@@ -1,4 +1,4 @@
-package fr.corentinbringer.fleetlens.infrastructure;
+package fr.corentinbringer.fleetlens.infrastructure.commandliner;
 
 import fr.corentinbringer.fleetlens.domain.model.User;
 import fr.corentinbringer.fleetlens.domain.model.UserRole;
