@@ -3,6 +3,7 @@ package fr.corentinbringer.fleetlens.application.mvc.admin;
 import fr.corentinbringer.fleetlens.application.dto.user.CreateUserRequest;
 import fr.corentinbringer.fleetlens.application.dto.user.UserFilterRequest;
 import fr.corentinbringer.fleetlens.application.dto.user.UserListView;
+import fr.corentinbringer.fleetlens.domain.model.User;
 import fr.corentinbringer.fleetlens.domain.model.UserRole;
 import fr.corentinbringer.fleetlens.domain.service.UserService;
 import jakarta.validation.Valid;
@@ -39,6 +40,16 @@ public class UserController {
         return "admin/users/list";
     }
 
+    @GetMapping("{id}")
+    public String getUser(@PathVariable UUID id, Model model) {
+        User user = userService.findById(id);
+
+        model.addAttribute("user", user);
+        model.addAttribute("roles", UserRole.values());
+
+        return "admin/users/edit";
+    }
+
     @PostMapping("/{id}/delete")
     public String deleteUser(@PathVariable UUID id) {
         userService.delete(id);
@@ -60,6 +71,17 @@ public class UserController {
         }
 
         userService.createUser(userRequest);
+        return "redirect:/admin/users";
+    }
+
+    @PostMapping("/{id}/edit")
+    public String editUser(@PathVariable UUID id, @ModelAttribute("user") @Valid CreateUserRequest userRequest,
+                           BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            return "admin/users/" + id;
+        }
+
+        userService.editUser(id, userRequest);
         return "redirect:/admin/users";
     }
 }
