@@ -7,6 +7,7 @@ import fr.corentinbringer.fleetlens.domain.exception.UserAlreadyExistsException;
 import fr.corentinbringer.fleetlens.domain.model.User;
 import fr.corentinbringer.fleetlens.domain.repository.UserRepository;
 import fr.corentinbringer.fleetlens.domain.specification.UserSpecification;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -56,6 +57,25 @@ public class UserService {
         user.setFirstName(userRequest.getFirstName());
         user.setLastName(userRequest.getLastName());
         user.setEmail(userRequest.getEmail());
+        user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
+        user.setRole(userRequest.getRole());
+
+        userRepository.save(user);
+    }
+
+    public User findById(UUID id) {
+        return userRepository.findById(id).orElseThrow( () -> new EntityNotFoundException("User with provided UUID not found"));
+    }
+
+    public void editUser(UUID id, CreateUserRequest userRequest) {
+        if(id == null) {
+            throw new IllegalArgumentException("Provide user id ");
+        }
+
+        User user = findById(id);
+        user.setEmail(userRequest.getEmail());
+        user.setFirstName(userRequest.getFirstName());
+        user.setLastName(userRequest.getLastName());
         user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
         user.setRole(userRequest.getRole());
 
