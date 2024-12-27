@@ -1,64 +1,65 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>FleetLens</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-</head>
-<body class="bg-gray-100 flex h-screen">
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout}">
+<div th:fragment="content">
+    <div class="container mx-auto mt-6">
+        <div class="bg-white p-6 rounded shadow-md">
+            <h1 class="text-2xl font-bold mb-4">Accounts list</h1>
 
-<!-- Sidebar -->
-<div th:replace="~{fragments/sidebar :: sidebar}"></div>
+            <!-- Search Bar -->
+            <div class="mb-4">
+                <form th:action="@{/accounts}" method="get" class="flex">
+                    <input type="text"
+                           name="username"
+                           placeholder="Search by username..."
+                           class="flex-1 p-2 border border-gray-300 rounded-l focus:ring-2 focus:ring-blue-500"
+                           th:value="${username}" />
+                    <button type="submit"
+                            class="bg-blue-500 text-white px-4 py-2 rounded-r hover:bg-blue-600">
+                        Search
+                    </button>
+                </form>
+            </div>
 
-<!-- Main Content Container -->
-<div class="flex flex-col flex-1">
-    <!-- Header -->
-    <div th:replace="~{fragments/header :: header}"></div>
+            <!-- Accounts Table -->
+            <table class="table-auto w-full text-left border-collapse">
+                <thead>
+                <tr>
+                    <th class="border-b p-4">Username</th>
+                    <th class="border-b p-4">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="account : ${accounts}">
+                    <td class="border-b p-4 truncate" th:text="${account.username}"></td>
+                    <td class="border-b p-4">
+                        <a th:href="@{/accounts/{id}(id=${account.id})}"
+                           class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+                            Details
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
 
-    <!-- Main Content -->
-    <div class="flex-1 p-6 overflow-auto">
-        <div class="container mx-auto mt-6">
-            <div class="bg-white p-6 rounded shadow-md">
-                <h1 class="text-2xl font-bold mb-4">Accounts list</h1>
-
-                <!-- Search Bar -->
-                <div class="mb-4">
-                    <form th:action="@{/accounts}" method="get" class="flex">
-                        <input type="text"
-                               name="username"
-                               placeholder="Search by username..."
-                               class="flex-1 p-2 border border-gray-300 rounded-l focus:ring-2 focus:ring-blue-500"
-                               th:value="${username}" />
-                        <button type="submit"
-                                class="bg-blue-500 text-white px-4 py-2 rounded-r hover:bg-blue-600">
-                            Search
-                        </button>
-                    </form>
-                </div>
-
-                <!-- Accounts Table -->
-                <table class="table-auto w-full text-left border-collapse">
-                    <thead>
-                    <tr>
-                        <th class="border-b p-4">Username</th>
-                        <th class="border-b p-4">Actions</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="account : ${accounts}">
-                        <td class="border-b p-4 truncate" th:text="${account.username}"></td>
-                        <td class="border-b p-4">
-                            <a th:href="@{/accounts/{id}(id=${account.id})}"
-                               class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
-                                Details
-                            </a>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+        <!-- Pagination -->
+        <div class="mt-4 flex justify-between items-center" th:if="${totalPages > 1}">
+            <div class="flex space-x-2">
+                <a th:href="@{/accounts(page=${prevPage}, size=12, username=${username})}"
+                   class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+                   th:classappend="${currentPage == 0 ? 'opacity-50 cursor-not-allowed' : ''}">
+                    Previous
+                </a>
+                <a th:href="@{/accounts(page=${nextPage}, size=12, username=${username})}"
+                   class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+                   th:classappend="${currentPage + 1 >= totalPages ? 'opacity-50 cursor-not-allowed' : ''}">
+                    Next
+                </a>
+            </div>
+            <div class="text-gray-600">
+                Page <span th:text="${currentPage + 1}"></span> of <span th:text="${totalPages}"></span>
             </div>
         </div>
     </div>
 </div>
-
-</body>
 </html>

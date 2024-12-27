@@ -1,13 +1,12 @@
 package fr.corentinbringer.fleetlens.application.mvc.admin;
 
-import fr.corentinbringer.fleetlens.application.dto.user.CreateUserRequest;
-import fr.corentinbringer.fleetlens.application.dto.user.UserFilterRequest;
-import fr.corentinbringer.fleetlens.application.dto.user.UserListView;
+import fr.corentinbringer.fleetlens.application.dto.user.*;
 import fr.corentinbringer.fleetlens.domain.model.User;
 import fr.corentinbringer.fleetlens.domain.model.UserRole;
 import fr.corentinbringer.fleetlens.domain.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,6 +21,7 @@ import java.util.UUID;
 public class UserController {
 
     private final UserService userService;
+    private final ModelMapper modelMapper;
 
     @GetMapping
     public String getAllUsers(@RequestParam(defaultValue = "0") int page,
@@ -43,8 +43,9 @@ public class UserController {
     @GetMapping("{id}")
     public String getUser(@PathVariable UUID id, Model model) {
         User user = userService.findById(id);
+        EditUserView editUser = modelMapper.map(user, EditUserView.class);
 
-        model.addAttribute("user", user);
+        model.addAttribute("user", editUser);
         model.addAttribute("roles", UserRole.values());
 
         return "admin/users/edit";
@@ -64,7 +65,9 @@ public class UserController {
     }
 
     @PostMapping("/create")
-    public String createUser(@ModelAttribute("user") @Valid CreateUserRequest userRequest, BindingResult result, Model model) {
+    public String createUser(@ModelAttribute("user") @Valid CreateUserRequest userRequest,
+                             BindingResult result,
+                             Model model) {
         if (result.hasErrors()) {
             model.addAttribute("roles", UserRole.values());
             return "admin/users/create";
@@ -75,8 +78,9 @@ public class UserController {
     }
 
     @PostMapping("/{id}/edit")
-    public String editUser(@PathVariable UUID id, @ModelAttribute("user") @Valid CreateUserRequest userRequest,
-                           BindingResult result, Model model) {
+    public String editUser(@PathVariable UUID id, @ModelAttribute("user") @Valid EditUserRequest userRequest,
+                           BindingResult result,
+                           Model model) {
         if (result.hasErrors()) {
             return "admin/users/" + id;
         }

@@ -3,6 +3,8 @@ package fr.corentinbringer.fleetlens.domain.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.UUID;
+
 @Getter
 @Setter
 @Builder
@@ -13,11 +15,14 @@ import lombok.*;
 public class Token {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(generator = "uuid-hibernate-generator")
+    private UUID id;
 
     @Column(unique = true, nullable = false)
     private String token;
+
+    @Column(nullable = false)
+    private String name;
 
     private boolean revoked = false;
 }

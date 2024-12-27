@@ -6,8 +6,8 @@
     <!-- Logo/Brand Section -->
     <div class="p-4 border-b border-gray-700">
         <div class="flex items-center">
-            <img th:if="${settings?.logo}" th:src="${settings.logo}" class="h-8 w-8 mr-2" />
-            <span class="text-xl font-bold" th:text="${settings?.platformName ?: 'FleetLens'}">FleetLens</span>
+            <img src="" class="h-8 w-8 mr-2" />
+            <span class="text-xl font-bold">FleetLens</span>
         </div>
     </div>
 
@@ -84,15 +84,13 @@
         </div>
     </nav>
 
-    <!-- User Profile Section at bottom -->
     <div class="p-4 border-t border-gray-700">
-        <a href="/profile" class="flex items-center">
-<!--            <div class="w-8 h-8 rounded-full bg-gray-600 mr-3"></div>-->
+        <div class="flex items-center">
             <div>
-                <p class="text-sm font-medium" th:text="${currentUser?.username}">Username</p>
-                <p class="text-xs text-gray-400">View Profile</p>
+                <p class="text-sm font-medium">Version</p>
+                <p class="text-xs text-gray-400" th:text="${appVersion}">0.0.1</p>
             </div>
-        </a>
+        </div>
     </div>
 </div>
 </body>

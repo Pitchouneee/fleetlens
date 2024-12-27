@@ -1,69 +1,50 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>FleetLens</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-<body class="bg-gray-100 flex h-screen">
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout}">
+<div th:fragment="content">
+    <h1 class="text-2xl font-bold mb-6">Dashboard</h1>
 
-<!-- Sidebar -->
-<div th:replace="~{fragments/sidebar :: sidebar}"></div>
-
-<!-- Main Content Container -->
-<div class="flex flex-col flex-1">
-    <!-- Header -->
-    <div th:replace="~{fragments/header :: header}"></div>
-
-    <!-- Main Content -->
-    <div class="flex-1 p-6 overflow-auto">
-        <h1 class="text-2xl font-bold mb-6">Dashboard</h1>
-
-        <!-- Overview Stats -->
-        <div class="grid grid-cols-4 gap-4 mb-6">
-            <div class="bg-white p-4 rounded shadow">
-                <h3 class="font-semibold">Total Machines</h3>
-                <p class="text-xl" th:text="${totalMachines}">0</p>
-            </div>
-            <div class="bg-white p-4 rounded shadow">
-                <h3 class="font-semibold">Total accounts</h3>
-                <p class="text-xl" th:text="${totalAccounts}">0</p>
-            </div>
+    <!-- Overview Stats -->
+    <div class="grid grid-cols-4 gap-4 mb-6">
+        <div class="bg-white p-4 rounded shadow">
+            <h3 class="font-semibold">Total Machines</h3>
+            <p class="text-xl" th:text="${totalMachines}">0</p>
         </div>
-
-        <!-- Charts Section -->
-        <div class="grid grid-cols-2 gap-6">
-            <!-- OS Distribution Pie Chart -->
-            <div class="bg-white p-4 rounded shadow">
-                <h3 class="font-semibold mb-4">OS Distribution</h3>
-                <canvas id="osChart"></canvas>
-            </div>
+        <div class="bg-white p-4 rounded shadow">
+            <h3 class="font-semibold">Total accounts</h3>
+            <p class="text-xl" th:text="${totalAccounts}">0</p>
         </div>
     </div>
-</div>
 
-<!-- Chart.js Initialization Script -->
-<script th:inline="javascript">
-document.addEventListener('DOMContentLoaded', function() {
-    // OS Distribution Chart
-    var osCtx = document.getElementById('osChart').getContext('2d');
-    var osLabels = /*[[${osDistribution.keySet()}]]*/ [];
-    var osData = /*[[${osDistribution.values()}]]*/ [];
-    new Chart(osCtx, {
-        type: 'pie',
-        data: {
-            labels: osLabels,
-            datasets: [{
-                data: osData,
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.6)',
-                    'rgba(54, 162, 235, 0.6)',
-                    'rgba(255, 206, 86, 0.6)'
-                ]
-            }]
-        }
-    });
-});
-</script>
-</body>
+    <!-- Charts Section -->
+    <div class="grid grid-cols-2 gap-6">
+        <!-- OS Distribution Pie Chart -->
+        <div class="bg-white p-4 rounded shadow">
+            <h3 class="font-semibold mb-4">OS Distribution</h3>
+            <canvas id="osChart"></canvas>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+            // OS Distribution Chart
+            var osCtx = document.getElementById('osChart').getContext('2d');
+            var osLabels = /*[[${osDistribution.keySet()}]]*/ [];
+            var osData = /*[[${osDistribution.values()}]]*/ [];
+            new Chart(osCtx, {
+                type: 'pie',
+                data: {
+                    labels: osLabels,
+                    datasets: [{
+                        data: osData,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.6)',
+                            'rgba(54, 162, 235, 0.6)',
+                            'rgba(255, 206, 86, 0.6)'
+                        ]
+                    }]
+                }
+            });
+        });
+    </script>
+</div>
 </html>

@@ -18,16 +18,16 @@ public class AdminAccountInitializer implements CommandLineRunner {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
 
-    @Value("${admin.firstName}")
+    @Value("${app.admin.firstName}")
     private String firstName;
 
-    @Value("${admin.lastName}")
+    @Value("${app.admin.lastName}")
     private String lastName;
 
-    @Value("${admin.email}")
+    @Value("${app.admin.email}")
     private String adminEmail;
 
-    @Value("${admin.password}")
+    @Value("${app.admin.password}")
     private String adminPassword;
 
     @Override

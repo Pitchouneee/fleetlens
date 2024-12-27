@@ -3,6 +3,15 @@
 <body>
 <header th:fragment="header" class="bg-white shadow-md p-4 flex justify-end items-center">
     <div class="flex items-center space-x-4">
+        <!-- User Profile Link -->
+        <a th:href="@{/profile}" class="flex items-center space-x-2 hover:text-blue-500">
+            <svg class="w-6 h-6 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A4.992 4.992 0 0112 15a4.992 4.992 0 016.879 2.804M12 12a5 5 0 100-10 5 5 0 000 10zm9 10a9 9 0 10-18 0h18z" />
+            </svg>
+            <span th:text="${currentUser?.username ?: 'Profile'}">Profile</span>
+        </a>
+
+        <!-- Logout Button -->
         <form th:action="@{/logout}" method="post" class="inline">
             <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
                 Logout

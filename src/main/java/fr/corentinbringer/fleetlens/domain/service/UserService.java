@@ -1,6 +1,7 @@
 package fr.corentinbringer.fleetlens.domain.service;
 
 import fr.corentinbringer.fleetlens.application.dto.user.CreateUserRequest;
+import fr.corentinbringer.fleetlens.application.dto.user.EditUserRequest;
 import fr.corentinbringer.fleetlens.application.dto.user.UserFilterRequest;
 import fr.corentinbringer.fleetlens.application.dto.user.UserListView;
 import fr.corentinbringer.fleetlens.domain.exception.UserAlreadyExistsException;
@@ -67,16 +68,20 @@ public class UserService {
         return userRepository.findById(id).orElseThrow( () -> new EntityNotFoundException("User with provided UUID not found"));
     }
 
-    public void editUser(UUID id, CreateUserRequest userRequest) {
-        if(id == null) {
-            throw new IllegalArgumentException("Provide user id ");
+    public void editUser(UUID id, EditUserRequest userRequest) {
+        if (id == null) {
+            throw new IllegalArgumentException("Provide user id");
         }
 
         User user = findById(id);
         user.setEmail(userRequest.getEmail());
         user.setFirstName(userRequest.getFirstName());
         user.setLastName(userRequest.getLastName());
-        user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
+
+        if (!userRequest.getPassword().isEmpty()) {
+            user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
+        }
+
         user.setRole(userRequest.getRole());
 
         userRepository.save(user);

@@ -9,3 +9,10 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+app:
+  version: @project.version@
+  admin:
+    firstName:
+    lastName:
+    email:
+    password:
