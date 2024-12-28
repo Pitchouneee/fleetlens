@@ -1,4 +1,4 @@
-package fr.corentinbringer.fleetlens.infrastructure;
+package fr.corentinbringer.fleetlens.infrastructure.web;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.ControllerAdvice;
