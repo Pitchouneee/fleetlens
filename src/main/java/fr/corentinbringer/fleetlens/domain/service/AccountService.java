@@ -51,7 +51,7 @@ public class AccountService {
         Account account = accountRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Account with provided UUID not found"));
 
-        List<AccountDetailsView.MachineDTO> machines = account.getAccountMachines().stream()
+        List<AccountDetailsView.MachineView> machines = account.getAccountMachines().stream()
                 .map(accountMachine -> {
                     Machine machine = accountMachine.getMachine();
 
@@ -62,11 +62,11 @@ public class AccountService {
                             .toList();
 
                     // Map the machine and add filtered groups
-                    AccountDetailsView.MachineDTO machineDTO = modelMapper.map(machine, AccountDetailsView.MachineDTO.class);
-                    machineDTO.setSystemGroups(relevantSystemGroups);
-                    machineDTO.setRoot(accountMachine.isRoot());
+                    AccountDetailsView.MachineView machineView = modelMapper.map(machine, AccountDetailsView.MachineView.class);
+                    machineView.setSystemGroups(relevantSystemGroups);
+                    machineView.setRoot(accountMachine.isRoot());
 
-                    return machineDTO;
+                    return machineView;
                 })
                 .toList();
 

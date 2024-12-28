@@ -26,6 +26,7 @@
                     <th class="border-b p-4">Package Name</th>
                     <th class="border-b p-4">Package Version</th>
                     <th class="border-b p-4">Installed On</th>
+                    <th class="border-b p-4">Actions</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -33,9 +34,13 @@
                     <td class="border-b p-4 truncate" th:text="${software.packageName}"></td>
                     <td class="border-b p-4 truncate" th:text="${software.packageVersion}"></td>
                     <td class="border-b p-4 truncate">
-                                    <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
-                                        <span th:text="${software.machineCount}"></span> machines
-                                    </span>
+                        <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
+                            <span th:text="${software.machineCount}"></span> machines
+                        </span>
+                    </td>
+                    <td class="border px-4 py-2">
+                        <a th:href="@{/softwares/{id}(id=${software.id}, version=${software.packageVersion})}"
+                           class="text-blue-500 hover:underline">View Details</a>
                     </td>
                 </tr>
                 </tbody>

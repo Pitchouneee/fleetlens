@@ -1,6 +1,8 @@
 package fr.corentinbringer.fleetlens.domain.repository;
 
+import fr.corentinbringer.fleetlens.application.dto.software.SoftwareDetailsView;
 import fr.corentinbringer.fleetlens.application.dto.software.SoftwareListView;
+import fr.corentinbringer.fleetlens.application.dto.software.SoftwareMachineDetailsView;
 import fr.corentinbringer.fleetlens.domain.model.Software;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -8,6 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -29,4 +32,32 @@ public interface SoftwareRepository extends JpaRepository<Software, UUID> {
             GROUP BY s.id, s.packageName, sm.packageVersion
             """)
     Page<SoftwareListView> findAllDistinctSoftwareWithVersion(Pageable pageable, String searchTerm);
+
+    @Query("""
+        SELECT DISTINCT new fr.corentinbringer.fleetlens.application.dto.software.SoftwareDetailsView(
+            s.id,
+            s.packageName,
+            sm.packageVersion,
+            null
+        )
+        FROM Software s
+        JOIN s.softwareMachines sm
+        WHERE s.id = :softwareId
+        AND sm.packageVersion = :version
+    """)
+    Optional<SoftwareDetailsView> findSoftwareDetailsByIdAndVersion(UUID softwareId, String version);
+
+    @Query("""
+        SELECT new fr.corentinbringer.fleetlens.application.dto.software.SoftwareMachineDetailsView(
+            m.id,
+            m.hostname,
+            m.ipAddressV4
+        )
+        FROM Software s
+        JOIN s.softwareMachines sm
+        JOIN sm.machine m
+        WHERE s.id = :softwareId
+        AND sm.packageVersion = :version
+    """)
+    List<SoftwareMachineDetailsView> findMachinesForSoftware(UUID softwareId, String version);
 }

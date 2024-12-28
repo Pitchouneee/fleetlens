@@ -16,13 +16,13 @@ public class AccountDetailsView {
 
     private UUID id;
     private String username;
-    private List<MachineDTO> machines;
+    private List<MachineView> machines;
 
     @Getter
     @Setter
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class MachineDTO {
+    public static class MachineView {
         private String hostname;
         private List<String> systemGroups;
         private boolean isRoot;
