@@ -82,7 +82,7 @@ public class UserController {
                            BindingResult result,
                            Model model) {
         if (result.hasErrors()) {
-            return "admin/users/" + id;
+            return "redirect:admin/users/" + id;
         }
 
         userService.editUser(id, userRequest);
