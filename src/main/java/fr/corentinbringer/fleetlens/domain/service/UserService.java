@@ -1,5 +1,6 @@
 package fr.corentinbringer.fleetlens.domain.service;
 
+import fr.corentinbringer.fleetlens.application.dto.profile.EditUserProfilRequest;
 import fr.corentinbringer.fleetlens.application.dto.user.CreateUserRequest;
 import fr.corentinbringer.fleetlens.application.dto.user.EditUserRequest;
 import fr.corentinbringer.fleetlens.application.dto.user.UserFilterRequest;
