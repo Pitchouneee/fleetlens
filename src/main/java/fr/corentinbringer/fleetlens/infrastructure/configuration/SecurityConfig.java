@@ -18,8 +18,12 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/login", "/css/**", "/images/**", "/js/**").permitAll()
+                        .requestMatchers("/api/**").permitAll()
                         .requestMatchers("/admin/**").hasRole(String.valueOf(UserRole.ADMIN))
                         .anyRequest().authenticated()
+                )
+                .csrf(csrf -> csrf
+                        .ignoringRequestMatchers("/api/**")
                 )
                 .formLogin(formLogin -> formLogin
                         .loginPage("/login")
