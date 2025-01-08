@@ -36,7 +36,10 @@ public class SoftwareService {
     public Page<SoftwareListView> getAllSoftwareWithVersion(int page, int size, SoftwareFilterRequest filterRequest) {
         Pageable pageable = PageRequest.of(page, size);
 
-        return softwareRepository.findAllDistinctSoftwareWithVersion(pageable, filterRequest.getSearchTerm());
+        return softwareRepository.findAllDistinctSoftwareWithVersion(
+                pageable,
+                filterRequest.getSearchTerm() != null ? filterRequest.getSearchTerm() : ""
+        );
     }
 
     @Transactional

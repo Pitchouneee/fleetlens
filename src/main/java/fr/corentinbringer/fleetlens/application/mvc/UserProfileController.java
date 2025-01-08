@@ -1,15 +1,12 @@
 package fr.corentinbringer.fleetlens.application.mvc;
 
 import fr.corentinbringer.fleetlens.application.dto.profile.EditUserProfilRequest;
-import fr.corentinbringer.fleetlens.application.dto.user.EditUserRequest;
 import fr.corentinbringer.fleetlens.application.dto.user.EditUserView;
 import fr.corentinbringer.fleetlens.domain.model.User;
 import fr.corentinbringer.fleetlens.domain.model.UserRole;
 import fr.corentinbringer.fleetlens.domain.service.ProfileService;
-import fr.corentinbringer.fleetlens.domain.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,7 +23,6 @@ import java.security.Principal;
 public class UserProfileController {
 
     private final ModelMapper modelMapper;
-
     private final ProfileService profileService;
 
     @GetMapping()
@@ -38,7 +34,7 @@ public class UserProfileController {
         model.addAttribute("user", editUser);
         model.addAttribute("roles", UserRole.values());
 
-        return "/profile/edit";
+        return "profile/edit";
     }
 
     @PostMapping("/edit")

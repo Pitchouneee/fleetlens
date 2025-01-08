@@ -18,10 +18,10 @@ public class AdminAccountInitializer implements CommandLineRunner {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
 
-    @Value("${app.admin.firstName}")
+    @Value("${app.admin.firstname}")
     private String firstName;
 
-    @Value("${app.admin.lastName}")
+    @Value("${app.admin.lastname}")
     private String lastName;
 
     @Value("${app.admin.email}")
