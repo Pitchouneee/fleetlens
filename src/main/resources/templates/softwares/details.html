@@ -1,39 +1,46 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout}">
 <div th:fragment="content">
+
+    <div class="flex w-full p-3 h-16 bg-white sticky top-0 border-b border-gray items-center" >
+        <a href="/softwares" title="Back to list" class="flex items-center justify-center w-9 h-9 bg-gray-300 text-black rounded-full ml-2 hover:bg-gray-400 mr-3">
+            <span class="fal fa-arrow-left"></span>
+        </a>
+        <h1 class="text-2xl font-bold mr-3">Software Details</h1>
+        <span class="inline-flex items-center rounded-md bg-primary-50 px-2 font-medium text-primary ring-1 ring-primary-300 ring-inset mr-2"> <span class="mr-1">Package Name : </span>  <span th:text="${software.packageName}"></span></span>
+        <span class="inline-flex items-center rounded-md bg-primary-50 px-2 font-medium text-primary ring-1 ring-primary-300 ring-inset"> <span class="mr-1">Package Version : </span>  <span th:text="${software.packageVersion}"></span></span>
+
+    </div>
     <!-- Update the detail view (detail.html) -->
-    <div class="container mx-auto mt-6 p-6 bg-white shadow-md rounded">
-        <!-- Software Basic Information -->
-        <div class="space-y-4 mb-6">
-            <h2 class="text-2xl font-bold mb-4">Software Details</h2>
-            <p><strong>Package Name:</strong> <span th:text="${software.packageName}"></span></p>
-            <p><strong>Package Version:</strong> <span th:text="${software.packageVersion}"></span></p>
-        </div>
+    <div class="p-4">
+
 
         <!-- Machines Section -->
-        <div class="mt-6">
-            <h3 class="text-xl font-semibold mb-4">Installed Machines</h3>
+        <div class="bg-white p-6">
             <div class="overflow-x-auto">
-                <table class="min-w-full table-auto">
-                    <thead class="bg-gray-50">
+                <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Hostname</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">IP</th>
+                        <th class="px-6 py-3">Installed on</th>
+                        <th class="px-6 py-3 ">IP</th>
                     </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
-                    <tr th:each="machine : ${software.machines}">
-                        <td class="px-6 py-4 whitespace-nowrap" th:text="${machine.hostname}"></td>
-                        <td class="px-6 py-4 whitespace-nowrap" th:text="${machine.ipAddressV4}"></td>
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200"  th:each="machine : ${software.machines}">
+                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white" th:text="${machine.hostname}"></th>
+                        <td class="px-6 py-4 whitespace-nowrap"><span class="inline-flex items-center rounded-full bg-primary px-2  font-medium text-white mr-2"  th:text="${machine.ipAddressV4}"></span></td>
                     </tr>
                     </tbody>
                 </table>
+
+
+
+
+
+
             </div>
         </div>
 
-        <a th:href="@{/softwares}" class="mt-6 inline-block text-blue-500 hover:underline">
-            Back to Software List
-        </a>
     </div>
 </div>
 </html>

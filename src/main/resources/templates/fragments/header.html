@@ -1,20 +1,19 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
-<header th:fragment="header" class="bg-white shadow-md p-4 flex justify-end items-center">
+<header th:fragment="header" class="bg-white border-b border-gray py-3 px-4 h-16 flex justify-end items-center">
     <div class="flex items-center space-x-4">
         <!-- User Profile Link -->
         <a th:href="@{/profile}" class="flex items-center space-x-2 hover:text-blue-500">
-            <svg class="w-6 h-6 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A4.992 4.992 0 0112 15a4.992 4.992 0 016.879 2.804M12 12a5 5 0 100-10 5 5 0 000 10zm9 10a9 9 0 10-18 0h18z" />
-            </svg>
-            <span th:text="${currentUser?.username ?: 'Profile'}">Profile</span>
+            <span class="fal fa-user"></span>
+            <span th:text="${currentUser?.username ?: 'My profile'}">My profile</span>
         </a>
+
 
         <!-- Logout Button -->
         <form th:action="@{/logout}" method="post" class="inline">
-            <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
-                Logout
+            <button title="Déconnexion" type="button" class="w-9 h-9 bg-gray-800 rounded-full flex items-center justify-center text-white hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-300">
+                <span class="fal fa-sign-out"></span>
             </button>
         </form>
     </div>

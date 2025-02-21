@@ -1,26 +1,31 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout}">
 <div th:fragment="content">
-    <h1 class="text-2xl font-bold mb-6" th:text="#{dashboard}"></h1>
 
-    <!-- Overview Stats -->
-    <div class="grid grid-cols-4 gap-4 mb-6">
-        <div class="bg-white p-4 rounded shadow">
-            <h3 class="font-semibold">Total Machines</h3>
-            <p class="text-xl" th:text="${totalMachines}">0</p>
-        </div>
-        <div class="bg-white p-4 rounded shadow">
-            <h3 class="font-semibold">Total accounts</h3>
-            <p class="text-xl" th:text="${totalAccounts}">0</p>
-        </div>
+    <div class="flex w-full p-3 h-16 bg-white sticky top-0 border-b border-gray items-center" >
+        <h1 class="text-2xl font-bold" th:text="#{dashboard}"></h1>
     </div>
+    <div class="p-4">
 
-    <!-- Charts Section -->
-    <div class="grid grid-cols-2 gap-6">
-        <!-- OS Distribution Pie Chart -->
-        <div class="bg-white p-4 rounded shadow">
-            <h3 class="font-semibold mb-4">OS Distribution</h3>
-            <canvas id="osChart"></canvas>
+        <!-- Overview Stats -->
+        <div class="grid grid-cols-4 gap-4 mb-6">
+            <div class="bg-white p-4 rounded shadow">
+                <h3 class="font-semibold">Total Machines</h3>
+                <p class="text-xl" th:text="${totalMachines}">0</p>
+            </div>
+            <div class="bg-white p-4 rounded shadow">
+                <h3 class="font-semibold">Total accounts</h3>
+                <p class="text-xl" th:text="${totalAccounts}">0</p>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="grid grid-cols-2 gap-6">
+            <!-- OS Distribution Pie Chart -->
+            <div class="bg-white p-4 rounded shadow">
+                <h3 class="font-semibold mb-4">OS Distribution</h3>
+                <canvas id="osChart"></canvas>
+            </div>
         </div>
     </div>
 

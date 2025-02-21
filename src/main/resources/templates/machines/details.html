@@ -1,55 +1,137 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout}">
 <div th:fragment="content">
-    <!-- Machine Details Section -->
-    <div class="container mx-auto mt-6 p-6 bg-white shadow-md rounded">
-        <h2 class="text-2xl font-bold mb-4">Machine Details</h2>
-        <div class="space-y-4">
-            <p><strong>Hostname:</strong> <span th:text="${machine.hostname}"></span></p>
-            <p><strong>IP Address:</strong> <span th:text="${machine.ipAddressV4}"></span></p>
-            <p><strong>Operating System:</strong> <span th:text="${machine.operatingSystem}"></span></p>
-            <p><strong>Architecture:</strong> <span th:text="${machine.architecture}"></span></p>
-        </div>
 
-        <hr class="my-6">
+    <div class="flex w-full p-3 h-16 bg-white sticky top-0 border-b border-gray items-center" >
+        <a href="/machines" title="Back to list" class="flex items-center justify-center w-9 h-9 bg-gray-300 text-black rounded-full ml-2 hover:bg-gray-400 mr-3">
+            <span class="fal fa-arrow-left"></span>
+        </a>
+                <h1 class="text-xl font-bold mr-3">Details <span th:text="${machine.hostname}"></span></h1>
+
+                <span class="inline-flex items-center rounded-md bg-primary-50 px-2 font-medium text-primary ring-1 ring-primary-300 ring-inset"> <span class="mr-1">IP : </span>  <span th:text="${machine.ipAddressV4}"></span></span>
+                <span class="inline-flex items-center rounded-md bg-primary-50 px-2 font-medium text-primary ring-1 ring-primary-300 ring-inset mx-2"> <span class="mr-1"> Operating Sytem :  </span><span th:text="${machine.operatingSystem}"></span></span>
+                <span class="inline-flex items-center rounded-md bg-primary-50 px-2 font-medium text-primary ring-1 ring-primary-300 ring-inset "> <span class="mr-1">Architecture : </span> <span th:text="${machine.architecture}"></span></span>
+
+
+
+
+    </div>
+
+    <!-- Machine Details Section -->
+    <div class="p-4">
+    <div class="p-6 bg-white shadow-md rounded">
 
         <!-- Accounts Section -->
         <div class="space-y-4">
-            <h3 class="text-xl font-semibold">Accounts</h3>
-            <div th:each="accountMachine : ${machine.accountMachines}" class="p-4 bg-gray-50 rounded shadow">
-                <p><strong>Username:</strong> <span th:text="${accountMachine.account.username}"></span></p>
-                <p><strong>Root:</strong> <span th:text="${accountMachine.isRoot ? 'Yes' : 'No'}"></span></p>
+            <h3 class="text-xl font-semibold"><span class="fal fa-user"></span> Accounts</h3>
+
+
+
+
+            <div class="relative overflow-x-auto">
+                <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
+                    <tr>
+                        <th scope="col" class="px-6 py-3">
+                            Username
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Root
+                        </th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200"  th:each="accountMachine : ${machine.accountMachines}">
+                        <th scope="row" class="px-6 py-4 font-medium text-dark whitespace-nowrap dark:text-white">
+                            <span th:text="${accountMachine.account.username}" class="inline-flex items-center rounded-full bg-primary px-2 font-medium text-white mr-2"></span>
+
+                        </th>
+                        <td class="px-6 py-4" th:text="${accountMachine.isRoot ? 'Yes' : 'No'}">
+                        </td>
+                    </tr>
+
+                    </tbody>
+                </table>
             </div>
+
         </div>
+
+
+
 
         <hr class="my-6">
 
         <!-- System Groups Section -->
         <div class="space-y-4">
-            <h3 class="text-xl font-semibold">System Groups</h3>
-            <div th:each="group : ${machine.systemGroups}" class="p-4 bg-gray-50 rounded shadow">
-                <p><strong>Group Name:</strong> <span th:text="${group.name}"></span></p>
-                <p><strong>Members:</strong></p>
-                <ul class="list-disc pl-6">
-                    <li th:each="member : ${group.members}">
-                        <span th:text="${member.username}"></span>
-                    </li>
-                </ul>
-            </div>
+            <h3 class="text-xl font-semibold"><span class="fal fa-users-class"></span> System Groups</h3>
+
+            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                    <th scope="col" class="px-6 py-3">
+                        Group Name
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Members
+                    </th>
+
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200" th:each="group : ${machine.systemGroups}">
+                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white" th:text="${group.name}">
+                    </th>
+                    <td class="px-6 py-4">
+                        <span th:each="member : ${group.members}" class="inline-flex items-center rounded-full bg-primary px-2 font-medium text-white mr-2">  <span th:text="${member.username}"></span></span>
+
+                    </td>
+                </tr>
+
+                </tbody>
+            </table>
+
+
+
+
         </div>
 
         <hr class="my-6">
 
         <!-- Software Section -->
         <div class="space-y-4">
-            <h3 class="text-xl font-semibold">Software Installed</h3>
-            <div th:each="softwareMachine : ${machine.softwareMachines}" class="p-4 bg-gray-50 rounded shadow">
-                <p><strong>Package Name:</strong> <span th:text="${softwareMachine.software.packageName}"></span></p>
-                <p><strong>Package Version:</strong> <span th:text="${softwareMachine.packageVersion}"></span></p>
-            </div>
+            <h3 class="text-xl font-semibold"><span class="fal fa-window-alt"></span> Software Installed</h3>
+
+            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                    <th scope="col" class="px-6 py-3">
+                        Package Name
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Package Version
+                    </th>
+
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 border-gray-200" th:each="softwareMachine : ${machine.softwareMachines}">
+                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white" th:text="${softwareMachine.software.packageName}">
+                    </th>
+                    <td class="px-6 py-4">
+                        <span th:text="${softwareMachine.packageVersion}" class="inline-flex items-center rounded-full bg-gray-300 px-2 font-medium text-dark mr-2"></span>
+
+                    </td>
+                </tr>
+
+                </tbody>
+            </table>
+
+
+
         </div>
 
-        <a th:href="@{/dashboard}" class="mt-6 text-blue-500 hover:underline">Back to Dashboard</a>
+    </div>
     </div>
 </div>
 </html>
