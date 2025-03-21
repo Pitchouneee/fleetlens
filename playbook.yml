@@ -1,3 +1,5 @@
+# A mettre dans un fichier de conf par defaut /etc/fleetlens.conf mais a changer si tu veux
+# et l'api token n'est pas fonctionnel pour l'instantn c'est open bar l'api
 API_TOKEN="2208eaf3"
 API_URL="http://192.168.56.1:8080/api"
 ---
@@ -20,92 +22,51 @@ API_URL="http://192.168.56.1:8080/api"
           exit 1
         fi
 
-        # Retrieve the access token 
-        TOKEN=$(curl -s -X POST "$TOKEN_URL" \
-          -d "grant_type=client_credentials" \
-          -d "client_id=$CLIENT_ID" \
-          -d "client_secret=$CLIENT_SECRET" \
-          | grep -o '"access_token":"[^"]*' | sed 's/"access_token":"//')
-
-        # Check if the token was successfully retrieved
-        if [ -z "$TOKEN" ]; then
-          echo "Error: Failed to retrieve access token."
-          exit 1
-        fi
-
         # Collect machine data
         HOSTNAME=$(hostname)
         IP_ADDRESS_V4=$(hostname -I | awk '{print $1}')
         OS=$(lsb_release -d | awk -F'\t' '{print $2}')
         ARCH=$(uname -m)
 
+        # Collect users
+        USERS_JSON=$(awk -F: '{printf "{\"username\":\"%s\",\"root\":%s},", $1, ($3==0)?"true":"false"}' /etc/passwd | sed 's/,$//')
+
+        # Collect groups
+        GROUPS_JSON=$(getent group | awk -F: '{printf "{\"name\":\"%s\",\"members\":[\"%s\"]},", $1, $4}' | sed 's/,$//')
+
+        # Collect installed software
+        SOFTWARE_JSON=$(dpkg-query -W -f='{ "packageName": "${Package}", "packageVersion": "${Version}" },' 2>/dev/null | sed 's/,$//')
+
         # Prepare the JSON payload
-        if [[ -n "$MACHINE_ID" ]]; then
-            PAYLOAD=$(cat <<EOF
+        PAYLOAD=$(cat <<EOF
         {
-            "id": "$MACHINE_ID",
-            "computerParkId": "$COMPUTER_PARK_ID",
-            "hostname": "$HOSTNAME",
-            "ipAddressV4": "$IP_ADDRESS_V4",
-            "operatingSystem": "$OS",
-            "architecture": "$ARCH"
+            "machine": {
+                "hostname": "$HOSTNAME",
+                "ipAddressV4": "$IP_ADDRESS_V4",
+                "operatingSystem": "$OS",
+                "architecture": "$ARCH"
+            },
+            "accounts": [$USERS_JSON],
+            "groups": [$GROUPS_JSON],
+            "softwares": [$SOFTWARE_JSON]
         }
         EOF
-            )
-        else
-            PAYLOAD=$(cat <<EOF
-        {
-            "computerParkId": "$COMPUTER_PARK_ID",
-            "hostname": "$HOSTNAME",
-            "ipAddressV4": "$IP_ADDRESS_V4",
-            "operatingSystem": "$OS",
-            "architecture": "$ARCH"
-        }
-        EOF
-            )
-        fi
+        )
 
         # Send the data to the API
-        RESPONSE=$(curl -s -X POST "$API_URL/machines" -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" -d "$PAYLOAD")
+        RESPONSE=$(curl -s -o /tmp/fleetlens_response.txt -w "%{http_code}" -X POST "$API_URL/api/systems/sync" \
+            -H "Authorization: Bearer $TOKEN" \
+            -H "Content-Type: application/json" \
+            -d "$PAYLOAD")
 
-        # # Extract the Machine ID from the response if not already set
-        if [[ -z "$MACHINE_ID" ]]; then
-            MACHINE_ID=$(echo "$RESPONSE" | grep -oP '"id":"\K[^"]+')
-            if [[ -n "$MACHINE_ID" ]]; then
-                # Si la ligne existe, on la met à jour ; sinon, on l'ajoute
-                if grep -q "^MACHINE_ID=" "$CONFIG_FILE"; then
-                    sed -i "s/^MACHINE_ID=.*/MACHINE_ID=\"$MACHINE_ID\"/" "$CONFIG_FILE"
-                else
-                    echo "MACHINE_ID=\"$MACHINE_ID\"" >> "$CONFIG_FILE"
-                fi
-                echo "Machine registered with ID: $MACHINE_ID"
-            else
-                echo "Failed to register machine"
-                exit 1
-            fi
+        # Log the response
+        TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S')
+        if [[ "$RESPONSE" == "200" ]]; then
+            echo "$TIMESTAMP - Synchronization successful: $(cat /tmp/fleetlens_response.txt)" >> "$OUTPUT_FILE"
+        elif [[ "$RESPONSE" == "401" ]]; then
+            echo "$TIMESTAMP - Authentication error (401)" >> "$OUTPUT_FILE"
+        elif [[ "$RESPONSE" == "500" ]]; then
+            echo "$TIMESTAMP - Server error (500)" >> "$OUTPUT_FILE"
         else
-            echo "Machine data updated for ID: $MACHINE_ID"
-        fi
-
-        # Collecting users
-        USERS_JSON=$(awk -F: '{
-            printf "{\"username\":\"%s\",\"uid\":%d,\"gid\":%d,\"shell\":\"%s\",\"root\":%s},", $1, $3, $4, $7, ($3==0)?"true":"false"
-        }' /etc/passwd | sed 's/,$//')
-
-        # Collecting groups
-        GROUPS_JSON=$(getent group | awk -F: '{
-            printf "{\"groupName\":\"%s\",\"gid\":%d,\"members\":[\"%s\"]},", $1, $3, $4
-        }' | sed 's/,$//')
-
-        # Payload creation for sync
-        PAYLOAD_SYNC="{\"machineId\":\"$MACHINE_ID\",\"users\":[$USERS_JSON],\"groups\":[$GROUPS_JSON]}"
-
-        # Send the data to the API
-        RESPONSE_SYNC=$(curl -s -X POST "$API_URL/api/systems/sync" -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" -d "$PAYLOAD_SYNC")
-
-        # Save result
-        if [[ "$?" -eq 0 ]]; then
-            echo "$(date '+%Y-%m-%d %H:%M:%S') - Synchronization response: $RESPONSE_SYNC" >> "$OUTPUT_FILE"
-        else
-            echo "$(date '+%Y-%m-%d %H:%M:%S') - Synchronization failed" >> "$OUTPUT_FILE"
+            echo "$TIMESTAMP - Unexpected response ($RESPONSE): $(cat /tmp/fleetlens_response.txt)" >> "$OUTPUT_FILE"
         fi
