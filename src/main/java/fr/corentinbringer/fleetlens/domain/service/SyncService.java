@@ -24,7 +24,6 @@ public class SyncService {
     private final AccountService accountService;
     private final SystemGroupService systemGroupService;
     private final SoftwareService softwareService;
-
     private final AccountMachineService accountMachineService;
     private final SoftwareMachineService softwareMachineService;
 
@@ -46,21 +45,27 @@ public class SyncService {
 
         syncRequest.getAccounts().forEach(userDTO -> {
             Account account = accountService.findAccountByUsername(userDTO.getUsername());
-            account.setUsername(userDTO.getUsername());
+
+            if (account == null) {
+                account = new Account();
+                account.setUsername(userDTO.getUsername());
+            }
+
             accountService.save(account);
 
+            Account finalAccount = account;
             AccountMachine accountMachine = account.getAccountMachines().stream()
                     .filter(am -> am.getMachine().equals(machine))
                     .findFirst()
                     .orElseGet(() -> {
                         AccountMachine newAm = new AccountMachine();
                         AccountMachineId newId = new AccountMachineId();
-                        newId.setAccountId(account.getId());
+                        newId.setAccountId(finalAccount.getId());
                         newId.setMachineId(machine.getId());
                         newAm.setId(newId);
-                        newAm.setAccount(account);
+                        newAm.setAccount(finalAccount);
                         newAm.setMachine(machine);
-                        account.getAccountMachines().add(newAm);
+                        finalAccount.getAccountMachines().add(newAm);
                         machine.getAccountMachines().add(newAm);
                         return newAm;
                     });
@@ -97,22 +102,28 @@ public class SyncService {
 
         syncRequest.getSoftwares().forEach(softwareDTO -> {
             Software software = softwareService.findSoftwareByPackageName(softwareDTO.getPackageName());
-            software.setPackageName(softwareDTO.getPackageName());
+
+            if (software == null) {
+                software = new Software();
+                software.setPackageName(softwareDTO.getPackageName());
+            }
+
             softwareService.save(software);
 
+            Software finalSoftware = software;
             SoftwareMachine softwareMachine = software.getSoftwareMachines().stream()
                     .filter(sm -> sm.getMachine().equals(machine))
                     .findFirst()
                     .orElseGet(() -> {
                         SoftwareMachine newSm = new SoftwareMachine();
                         SoftwareMachineId newId = new SoftwareMachineId();
-                        newId.setSoftwareId(software.getId());
+                        newId.setSoftwareId(finalSoftware.getId());
                         newId.setMachineId(machine.getId());
                         newSm.setId(newId);
                         newSm.setPackageVersion(softwareDTO.getPackageVersion());
-                        newSm.setSoftware(software);
+                        newSm.setSoftware(finalSoftware);
                         newSm.setMachine(machine);
-                        software.getSoftwareMachines().add(newSm);
+                        finalSoftware.getSoftwareMachines().add(newSm);
                         machine.getSoftwareMachines().add(newSm);
                         return newSm;
                     });

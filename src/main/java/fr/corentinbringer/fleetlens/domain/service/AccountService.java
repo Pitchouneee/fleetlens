@@ -27,7 +27,7 @@ public class AccountService {
     private final ModelMapper modelMapper;
 
     public Account findAccountByUsername(String username) {
-        return accountRepository.findByUsername(username).orElse(new Account());
+        return accountRepository.findByUsername(username).orElse(null);
     }
 
     public Page<AccountListView> findAll(int page, int size, AccountFilterRequest filterRequest) {

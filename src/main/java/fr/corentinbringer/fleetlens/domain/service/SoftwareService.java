@@ -26,7 +26,7 @@ public class SoftwareService {
     private final ModelMapper modelMapper;
 
     public Software findSoftwareByPackageName(String packageName) {
-        return softwareRepository.findByPackageName(packageName).orElse(new Software());
+        return softwareRepository.findByPackageName(packageName).orElse(null);
     }
 
     public void save(Software software) {

@@ -1,6 +1,7 @@
 package fr.corentinbringer.fleetlens.infrastructure.configuration;
 
 import fr.corentinbringer.fleetlens.domain.model.UserRole;
+import fr.corentinbringer.fleetlens.infrastructure.filter.ApiTokenFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -8,13 +9,14 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, ApiTokenFilter apiTokenFilter) throws Exception {
         http
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/login", "/css/**", "/images/**", "/js/**").permitAll()
@@ -34,7 +36,8 @@ public class SecurityConfig {
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/login")
                         .permitAll()
-                );
+                )
+                .addFilterBefore(apiTokenFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

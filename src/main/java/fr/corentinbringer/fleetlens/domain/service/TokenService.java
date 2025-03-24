@@ -50,4 +50,10 @@ public class TokenService {
         token.setRevoked(true);
         tokenRepository.save(token);
     }
+
+    public boolean isTokenValid(String tokenValue) {
+        return tokenRepository.findByToken(tokenValue)
+                .filter(token -> !token.isRevoked())
+                .isPresent();
+    }
 }
