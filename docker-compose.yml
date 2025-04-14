@@ -1,4 +1,3 @@
-version: '3.8'
 services:
   postgres:
     image: postgres:17.2-alpine
@@ -11,8 +10,8 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgres
-  app-fleetlens:
-    container_name: app-fleetlens
+  fleetlens:
+    container_name: fleetlens
     build:
       context: .
       dockerfile: Dockerfile

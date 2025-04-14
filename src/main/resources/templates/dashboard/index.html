@@ -2,8 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout}">
 <div th:fragment="content">
 
-    <div class="flex w-full p-3 h-16 bg-white sticky top-0 border-b border-gray items-center" >
-        <h1 class="text-2xl font-bold" th:text="#{dashboard}"></h1>
+    <div class="flex w-full p-3 h-16 bg-white sticky top-0 border-b border-gray items-center">
+        <h1 class="text-2xl font-bold">Dashboard</h1>
     </div>
     <div class="p-4">
 
@@ -30,26 +30,26 @@
     </div>
 
     <script th:inline="javascript">
-        document.addEventListener('DOMContentLoaded', function() {
-            // OS Distribution Chart
-            var osCtx = document.getElementById('osChart').getContext('2d');
-            var osLabels = /*[[${osDistribution.keySet()}]]*/ [];
-            var osData = /*[[${osDistribution.values()}]]*/ [];
-            new Chart(osCtx, {
-                type: 'pie',
-                data: {
-                    labels: osLabels,
-                    datasets: [{
-                        data: osData,
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 0.6)',
-                            'rgba(54, 162, 235, 0.6)',
-                            'rgba(255, 206, 86, 0.6)'
-                        ]
-                    }]
-                }
-            });
+    document.addEventListener('DOMContentLoaded', function() {
+        // OS Distribution Chart
+        var osCtx = document.getElementById('osChart').getContext('2d');
+        var osLabels = /*[[${osDistribution.keySet()}]]*/ [];
+        var osData = /*[[${osDistribution.values()}]]*/ [];
+        new Chart(osCtx, {
+            type: 'pie',
+            data: {
+                labels: osLabels,
+                datasets: [{
+                    data: osData,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.6)',
+                        'rgba(54, 162, 235, 0.6)',
+                        'rgba(255, 206, 86, 0.6)'
+                    ]
+                }]
+            }
         });
+    });
     </script>
 </div>
 </html>

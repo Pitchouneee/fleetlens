@@ -25,13 +25,17 @@ public class ApiTokenFilter extends OncePerRequestFilter {
             String authHeader = request.getHeader("Authorization");
 
             if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Missing or invalid Authorization header");
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.setContentType("application/json");
+                response.getWriter().write("{\"error\":\"Missing or invalid Authorization header\"}");
                 return;
             }
 
             String tokenValue = authHeader.substring(7);
             if (!tokenService.isTokenValid(tokenValue)) {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid or revoked token");
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.setContentType("application/json");
+                response.getWriter().write("{\"error\":\"Invalid or revoked token\"}");
                 return;
             }
         }

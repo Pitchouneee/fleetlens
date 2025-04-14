@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout}">
 <div th:fragment="content">
-    <div class="flex w-full p-3 h-16 bg-white sticky top-0 border-b border-gray items-center" >
+    <div class="flex w-full p-3 h-16 bg-white sticky top-0 border-b border-gray items-center">
         <a href="/admin/users" title="Back to list" class="flex items-center justify-center w-9 h-9 bg-gray-300 text-black rounded-full ml-2 hover:bg-gray-400 mr-3">
             <span class="fal fa-arrow-left"></span>
         </a>
@@ -9,7 +9,6 @@
     </div>
 
     <div class="bg-white p-6 rounded shadow-md">
-
 
         <div class="bg-red-100 text-red-700 p-4 rounded mb-4" th:if="${errorMessage}">
             <p th:text="${errorMessage}"></p>

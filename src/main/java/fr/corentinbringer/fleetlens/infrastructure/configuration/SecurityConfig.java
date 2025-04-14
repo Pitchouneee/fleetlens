@@ -18,14 +18,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, ApiTokenFilter apiTokenFilter) throws Exception {
         http
+                .csrf(csrf -> csrf
+                        .ignoringRequestMatchers("/api/**")
+                )
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/login", "/css/**", "/images/**", "/js/**").permitAll()
                         .requestMatchers("/api/**").permitAll()
                         .requestMatchers("/admin/**").hasRole(String.valueOf(UserRole.ADMIN))
                         .anyRequest().authenticated()
-                )
-                .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/api/**")
                 )
                 .formLogin(formLogin -> formLogin
                         .loginPage("/login")

@@ -1,6 +1,6 @@
 server.port: 8080
 spring:
-  application.name: fleetlens-api
+  application.name: fleetlens
   datasource:
     url: ${DATASOURCE_URL:jdbc:postgresql://host.docker.internal:5432/db_fleetlens}
     username: ${DATASOURCE_USERNAME:fleetlens_user}

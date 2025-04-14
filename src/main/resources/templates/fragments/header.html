@@ -9,10 +9,10 @@
             <span th:text="${currentUser?.username ?: 'My profile'}">My profile</span>
         </a>
 
-
         <!-- Logout Button -->
         <form th:action="@{/logout}" method="post" class="inline">
-            <button title="Déconnexion" type="button" class="w-9 h-9 bg-gray-800 rounded-full flex items-center justify-center text-white hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-300">
+            <button title="Logout" type="button"
+                    class="w-9 h-9 bg-gray-800 rounded-full flex items-center justify-center text-white hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-300">
                 <span class="fal fa-sign-out"></span>
             </button>
         </form>

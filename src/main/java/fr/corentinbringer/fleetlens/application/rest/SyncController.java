@@ -20,6 +20,6 @@ public class SyncController {
     @PostMapping("/sync")
     public ResponseEntity<?> syncSystemData(@RequestBody @Valid SyncRequest syncRequest) {
         syncService.syncData(syncRequest);
-        return ResponseEntity.ok("Synchronization complete");
+        return ResponseEntity.ok("{\"status\":\"Synchronization complete\"}");
     }
 }

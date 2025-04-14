@@ -128,7 +128,9 @@ public class SyncService {
                         return newSm;
                     });
 
-            softwareMachine.setPackageVersion(softwareMachine.getPackageVersion());
+            if (!softwareDTO.getPackageVersion().equals(softwareMachine.getPackageVersion())) {
+                softwareMachine.setPackageVersion(softwareDTO.getPackageVersion());
+            }
 
             softwareMachineService.save(softwareMachine);
             softwareService.save(software);
