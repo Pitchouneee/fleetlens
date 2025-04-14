@@ -26,7 +26,10 @@
             <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
-                    <th class="border-b p-4">Username</th>
+                    <th scope="col" class="px-6 py-3 cursor-pointer group" data-column="username">
+                        <span>Username</span>
+                        <span class="ml-2 sort-icon fal fa-sort" aria-hidden="true"></span>
+                    </th>
                     <th class="border-b p-4 text-right">Actions</th>
                 </tr>
                 </thead>
@@ -61,7 +64,29 @@
                 </div>
             </div>
         </div>
-
     </div>
+
+    <script>
+    // Trie tableau
+    document.addEventListener('DOMContentLoaded', () => {
+    const getCellValue = (tr, idx) => tr.children[idx].textContent.trim();
+
+    const comparer = (idx, asc) => (a, b) => {
+      const v1 = getCellValue(asc ? a : b, idx);
+      const v2 = getCellValue(asc ? b : a, idx);
+      return isNaN(v1) || isNaN(v2) ? v1.localeCompare(v2) : v1 - v2;
+    };
+
+    document.querySelectorAll('th').forEach(th => {
+      th.addEventListener('click', () => {
+        const table = th.closest('table');
+        const tbody = table.querySelector('tbody');
+        Array.from(tbody.querySelectorAll('tr'))
+          .sort(comparer(Array.from(th.parentNode.children).indexOf(th), (th.asc = !th.asc)))
+          .forEach(tr => tbody.appendChild(tr));
+        });
+        });
+    });
+    </script>
 </div>
 </html>

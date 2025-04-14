@@ -59,14 +59,17 @@
                 <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
-                        <th scope="col" class="px-6 py-3">
-                            Hostname
+                        <th scope="col" class="px-6 py-3 cursor-pointer group" data-column="hostname">
+                            <span>Hostname</span>
+                            <span class="ml-2 sort-icon fal fa-sort" aria-hidden="true"></span>
                         </th>
-                        <th scope="col" class="px-6 py-3">
-                            IP Address
+                        <th scope="col" class="px-6 py-3 cursor-pointer group" data-column="ip">
+                            <span>IP Address</span>
+                            <span class="ml-2 sort-icon fal fa-sort" aria-hidden="true"></span>
                         </th>
-                        <th scope="col" class="px-6 py-3">
-                            Operating System
+                        <th scope="col" class="px-6 py-3 cursor-pointer group" data-column="os">
+                            <span>Operating System</span>
+                            <span class="ml-2 sort-icon fal fa-sort" aria-hidden="true"></span>
                         </th>
                         <th scope="col" class="px-6 py-3 text-center">
                             Actions
@@ -87,14 +90,10 @@
                                     class="fal fa-file-search"></span></a>
 
                         </td>
-
                     </tr>
-
                     </tbody>
                 </table>
-
             </div>
-
         </div>
 
         <!-- Pagination -->
@@ -119,39 +118,59 @@
 
     <script>
     // Récupération des boutons et des vues
-const cardViewBtn = document.getElementById('cardViewBtn');
-const listViewBtn = document.getElementById('listViewBtn');
-const cardView = document.getElementById('card-view');
-const listView = document.getElementById('list-view');
+    const cardViewBtn = document.getElementById('cardViewBtn');
+    const listViewBtn = document.getElementById('listViewBtn');
+    const cardView = document.getElementById('card-view');
+    const listView = document.getElementById('list-view');
 
-// Fonction pour activer un bouton et désactiver l'autre
-function setActiveButton(activeBtn, inactiveBtn) {
-  activeBtn.classList.add('bg-primary', 'text-white');
-  activeBtn.classList.remove('text-gray-500');
+    // Fonction pour activer un bouton et désactiver l'autre
+    function setActiveButton(activeBtn, inactiveBtn) {
+      activeBtn.classList.add('bg-primary', 'text-white');
+      activeBtn.classList.remove('text-gray-500');
 
-  inactiveBtn.classList.remove('bg-primary', 'text-white');
-  inactiveBtn.classList.add('text-gray-500');
-}
+      inactiveBtn.classList.remove('bg-primary', 'text-white');
+      inactiveBtn.classList.add('text-gray-500');
+    }
 
-// Initialisation : activer le bouton "Card" par défaut
-setActiveButton(listViewBtn, cardViewBtn);
+    // Initialisation : activer le bouton "Card" par défaut
+    setActiveButton(listViewBtn, cardViewBtn);
 
-// Gestion du clic sur le bouton "Card"
-cardViewBtn.addEventListener('click', function() {
-  cardView.classList.remove('hidden');
-  listView.classList.add('hidden');
+    // Gestion du clic sur le bouton "Card"
+    cardViewBtn.addEventListener('click', function() {
+      cardView.classList.remove('hidden');
+      listView.classList.add('hidden');
 
-  setActiveButton(cardViewBtn, listViewBtn);
-});
+      setActiveButton(cardViewBtn, listViewBtn);
+    });
 
-// Gestion du clic sur le bouton "List"
-listViewBtn.addEventListener('click', function() {
-  listView.classList.remove('hidden');
-  cardView.classList.add('hidden');
+    // Gestion du clic sur le bouton "List"
+    listViewBtn.addEventListener('click', function() {
+      listView.classList.remove('hidden');
+      cardView.classList.add('hidden');
 
-  setActiveButton(listViewBtn, cardViewBtn);
-});
+      setActiveButton(listViewBtn, cardViewBtn);
+    });
 
+    // Trie tableau
+    document.addEventListener('DOMContentLoaded', () => {
+    const getCellValue = (tr, idx) => tr.children[idx].textContent.trim();
+
+    const comparer = (idx, asc) => (a, b) => {
+      const v1 = getCellValue(asc ? a : b, idx);
+      const v2 = getCellValue(asc ? b : a, idx);
+      return isNaN(v1) || isNaN(v2) ? v1.localeCompare(v2) : v1 - v2;
+    };
+
+    document.querySelectorAll('th').forEach(th => {
+      th.addEventListener('click', () => {
+        const table = th.closest('table');
+        const tbody = table.querySelector('tbody');
+        Array.from(tbody.querySelectorAll('tr'))
+          .sort(comparer(Array.from(th.parentNode.children).indexOf(th), (th.asc = !th.asc)))
+          .forEach(tr => tbody.appendChild(tr));
+        });
+        });
+    });
     </script>
 </div>
 </html>
