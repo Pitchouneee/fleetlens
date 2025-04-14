@@ -1,6 +1,7 @@
 ---
 - name: Send data to API Fleetlens
   hosts: all
+  serial: 1
   become: true
   vars:
     OUTPUT_FILE: "/var/log/fleetlens_system_sync.log"
@@ -24,9 +25,9 @@
       ansible.builtin.command: uname -m
       register: arch_result
 
-    - name: Get system users
+    - name: Get system users (UID >= 1000)
       ansible.builtin.shell: >
-        awk -F: '{printf "{\"username\":\"%s\",\"root\":%s},", $1, ($3==0)?"true":"false"}' /etc/passwd | sed 's/,$//'
+        awk -F: '($3 >= 1000) {printf "{\"username\":\"%s\",\"root\":%s},", $1, ($3==0)?"true":"false"}' /etc/passwd | sed 's/,$//'
       register: users_json
 
     - name: Get system groups
@@ -67,6 +68,10 @@
         status_code: [200, 401, 500]
       register: api_response
       ignore_errors: yes
+
+    - name: Pause 5 seconds
+      pause:
+        seconds: 5
 
     - name: Log API response
       ansible.builtin.lineinfile:
