@@ -16,9 +16,9 @@ public class DashboardController {
 
     @GetMapping
     public String dashboard(Model model) {
-
         model.addAttribute("totalAccounts", dashboardService.getTotalAccounts());
         model.addAttribute("totalMachines", dashboardService.getTotalMachines());
+        model.addAttribute("totalSoftwares", dashboardService.getTotalSoftwares());
         model.addAttribute("osDistribution", dashboardService.getOSDistribution());
 
         return "dashboard/index";

@@ -29,6 +29,10 @@ public class SoftwareService {
         return softwareRepository.findByPackageName(packageName).orElse(null);
     }
 
+    public long totalUniqueSoftware() {
+        return softwareRepository.countDistinctSoftwares();
+    }
+
     public void save(Software software) {
         softwareRepository.save(software);
     }

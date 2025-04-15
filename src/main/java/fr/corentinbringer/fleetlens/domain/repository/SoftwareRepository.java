@@ -60,4 +60,7 @@ public interface SoftwareRepository extends JpaRepository<Software, UUID> {
         AND sm.packageVersion = :version
     """)
     List<SoftwareMachineDetailsView> findMachinesForSoftware(UUID softwareId, String version);
+
+    @Query("SELECT COUNT(*) FROM Software s")
+    long countDistinctSoftwares();
 }

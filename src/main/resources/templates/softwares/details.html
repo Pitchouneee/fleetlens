@@ -11,11 +11,9 @@
                 th:text="${software.packageName}"></span></span>
         <span class="inline-flex items-center rounded-md bg-primary-50 px-2 font-medium text-primary ring-1 ring-primary-300 ring-inset"> <span class="mr-1">Package Version : </span> <span
                 th:text="${software.packageVersion}"></span></span>
-
     </div>
-    <!-- Update the detail view (detail.html) -->
-    <div class="p-4">
 
+    <div class="p-4">
         <!-- Machines Section -->
         <div class="bg-white p-6">
             <div class="overflow-x-auto">
@@ -23,7 +21,7 @@
                     <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
                         <th class="px-6 py-3">Installed on</th>
-                        <th class="px-6 py-3 ">IP</th>
+                        <th class="px-6 py-3 ">IP address</th>
                     </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
@@ -34,7 +32,6 @@
                     </tr>
                     </tbody>
                 </table>
-
             </div>
         </div>
 

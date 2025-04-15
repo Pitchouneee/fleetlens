@@ -11,6 +11,7 @@ public class DashboardService {
 
     private final MachineService machineService;
     private final AccountService accountService;
+    private final SoftwareService softwareService;
 
     public long getTotalAccounts() {
         return accountService.totalUniqueAccount();
@@ -18,6 +19,10 @@ public class DashboardService {
 
     public long getTotalMachines() {
         return machineService.totalMachines();
+    }
+
+    public long getTotalSoftwares() {
+        return softwareService.totalUniqueSoftware();
     }
 
     public Map<String, Long> getOSDistribution() {
