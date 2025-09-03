@@ -17,7 +17,8 @@ import java.util.UUID;
 public class User {
 
     @Id
-    @GeneratedValue(generator = "uuid-hibernate-generator")
+//    @GeneratedValue(generator = "uuid-hibernate-generator")
+    @GeneratedValue
     private UUID id;
 
     @Column(nullable = false)
