@@ -9,6 +9,12 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+security:
+  api-key:
+    pepper: c639f1cd89fba35c45c7c9235d3b0fa2
+  jwt:
+    secret: 1b0263acfc70ac0aa31c39b27bab5db3
+    ttl-seconds: 3600
 app:
   admin:
     firstname: ${ADMIN_FIRSTNAME:Admin}

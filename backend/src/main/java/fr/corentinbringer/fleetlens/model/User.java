@@ -1,4 +1,4 @@
-package fr.corentinbringer.fleetlens.domain.model;
+package fr.corentinbringer.fleetlens.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

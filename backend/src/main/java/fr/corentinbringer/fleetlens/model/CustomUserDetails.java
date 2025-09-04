@@ -1,6 +1,5 @@
-package fr.corentinbringer.fleetlens.infrastructure.model;
+package fr.corentinbringer.fleetlens.model;
 
-import fr.corentinbringer.fleetlens.domain.model.User;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
