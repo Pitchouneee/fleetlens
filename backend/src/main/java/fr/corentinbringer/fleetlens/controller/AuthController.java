@@ -25,7 +25,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest req) {
         var authToken = new UsernamePasswordAuthenticationToken(req.email(), req.password());
-        Authentication auth = authenticationManager.authenticate(authToken); // via DaoAuthenticationProvider
+        Authentication auth = authenticationManager.authenticate(authToken);
         var user = (UserDetails) auth.getPrincipal();
         String jwt = jwtService.generateToken(user);
         return ResponseEntity.ok(new TokenResponse(jwt, "Bearer", Instant.now().plusSeconds(3600)));

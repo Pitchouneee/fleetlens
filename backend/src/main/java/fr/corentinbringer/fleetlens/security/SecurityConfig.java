@@ -17,6 +17,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -67,6 +69,13 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, ApiKeyAuthFilter apiKeyFilter) throws Exception {
+        JwtGrantedAuthoritiesConverter gac = new JwtGrantedAuthoritiesConverter();
+        gac.setAuthoritiesClaimName("roles");
+        gac.setAuthorityPrefix("");
+
+        JwtAuthenticationConverter jac = new JwtAuthenticationConverter();
+        jac.setJwtGrantedAuthoritiesConverter(gac);
+
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -78,7 +87,7 @@ public class SecurityConfig {
                 )
                 .addFilterBefore(apiKeyFilter, BearerTokenAuthenticationFilter.class)
                 .oauth2ResourceServer(oauth2 -> oauth2
-                        .jwt(Customizer.withDefaults())
+                        .jwt(jwt -> jwt.jwtAuthenticationConverter(jac))
                 );
 
         return http.build();
