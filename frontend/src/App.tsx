@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
+import RequireAuth from "@/components/RequireAuth";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import VMs from "./pages/VMs";
@@ -27,54 +28,74 @@ const App = () => (
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/" element={
-            <DashboardLayout>
-              <Dashboard />
-            </DashboardLayout>
+            <RequireAuth>
+              <DashboardLayout>
+                <Dashboard />
+              </DashboardLayout>
+            </RequireAuth>
           } />
           <Route path="/dashboard" element={
-            <DashboardLayout>
-              <Dashboard />
-            </DashboardLayout>
+            <RequireAuth>
+              <DashboardLayout>
+                <Dashboard />
+              </DashboardLayout>
+            </RequireAuth>
           } />
           <Route path="/vms" element={
-            <DashboardLayout>
-              <VMs />
-            </DashboardLayout>
+            <RequireAuth>
+              <DashboardLayout>
+                <VMs />
+              </DashboardLayout>
+            </RequireAuth>
           } />
           <Route path="/vms/:id" element={
-            <DashboardLayout>
-              <VMDetails />
-            </DashboardLayout>
+            <RequireAuth>
+              <DashboardLayout>
+                <VMDetails />
+              </DashboardLayout>
+            </RequireAuth>
           } />
           <Route path="/accounts" element={
-            <DashboardLayout>
-              <Accounts />
-            </DashboardLayout>
+            <RequireAuth>
+              <DashboardLayout>
+                <Accounts />
+              </DashboardLayout>
+            </RequireAuth>
           } />
           <Route path="/software" element={
-            <DashboardLayout>
-              <Software />
-            </DashboardLayout>
+            <RequireAuth>
+              <DashboardLayout>
+                <Software />
+              </DashboardLayout>
+            </RequireAuth>
           } />
           <Route path="/api-keys" element={
-            <DashboardLayout>
-              <APIKeys />
-            </DashboardLayout>
+            <RequireAuth>
+              <DashboardLayout>
+                <APIKeys />
+              </DashboardLayout>
+            </RequireAuth>
           } />
           <Route path="/users" element={
-            <DashboardLayout>
-              <Users />
-            </DashboardLayout>
+            <RequireAuth>
+              <DashboardLayout>
+                <Users />
+              </DashboardLayout>
+            </RequireAuth>
           } />
           <Route path="/users/:id/edit" element={
-            <DashboardLayout>
-              <EditUser />
-            </DashboardLayout>
+            <RequireAuth>
+              <DashboardLayout>
+                <EditUser />
+              </DashboardLayout>
+            </RequireAuth>
           } />
           <Route path="/profile" element={
-            <DashboardLayout>
-              <Profile />
-            </DashboardLayout>
+            <RequireAuth>
+              <DashboardLayout>
+                <Profile />
+              </DashboardLayout>
+            </RequireAuth>
           } />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

@@ -9,16 +9,24 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { clearToken } from "@/lib/auth";
 
 export const Header = () => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    clearToken();
+    navigate("/login", { replace: true });
+  };
+
   return (
     <header className="h-16 border-b border-border bg-card/50 backdrop-blur-sm flex items-center justify-between px-6">
       <div className="flex items-center space-x-4 flex-1">
         <div className="relative max-w-md">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-          <Input 
-            placeholder="Rechercher..." 
+          <Input
+            placeholder="Rechercher..."
             className="pl-10 bg-background/50 transition-smooth"
           />
         </div>
@@ -43,7 +51,7 @@ export const Header = () => {
               </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-destructive">
+            <DropdownMenuItem className="text-destructive" onClick={handleLogout}>
               Déconnexion
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -52,3 +60,4 @@ export const Header = () => {
     </header>
   );
 };
+

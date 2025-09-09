@@ -168,7 +168,7 @@ const APIKeys = () => {
         <CardHeader>
           <CardTitle>Clés API actives</CardTitle>
           <CardDescription>
-            Utilisez ces clés pour accéder à l'API CloudManager
+            Utilisez ces clés pour accéder à l'API Fleetlens
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -253,14 +253,14 @@ const APIKeys = () => {
         <CardHeader>
           <CardTitle>Documentation API</CardTitle>
           <CardDescription>
-            Comment utiliser vos clés API avec CloudManager
+            Comment utiliser vos clés API avec Fleetlens
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
             <h4 className="font-medium mb-2">Authentification</h4>
             <code className="text-sm bg-accent p-3 rounded block">
-              curl -H "Authorization: Bearer YOUR_API_KEY" https://api.cloudmanager.com/v1/vms
+              curl -H "Authorization: Bearer YOUR_API_KEY" https://api.Fleetlens.com/v1/vms
             </code>
           </div>
           <div>
@@ -268,7 +268,7 @@ const APIKeys = () => {
             <code className="text-sm bg-accent p-3 rounded block">
               {`{
   "method": "GET",
-  "url": "https://api.cloudmanager.com/v1/vms",
+  "url": "https://api.Fleetlens.com/v1/vms",
   "headers": {
     "Authorization": "Bearer YOUR_API_KEY",
     "Content-Type": "application/json"
