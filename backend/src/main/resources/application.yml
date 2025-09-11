@@ -19,5 +19,5 @@ app:
   admin:
     firstname: ${ADMIN_FIRSTNAME:Admin}
     lastname: ${ADMIN_LASTNAME:ADMIN}
-    email: ${ADMIN_EMAIL:admin@fleetlens.fr}
+    email: ${ADMIN_EMAIL:admin@admin.fr}
     password: ${ADMIN_PASSWORD:admin}
