@@ -20,7 +20,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Key, Plus, MoreHorizontal, Trash2 } from "lucide-react";
+import { Key, Plus, MoreHorizontal, Trash2, Copy } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
