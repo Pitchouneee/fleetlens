@@ -10,10 +10,10 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgres
-  fleetlens:
-    container_name: fleetlens
+  backend:
+    container_name: fleetlens-backend
     build:
-      context: .
+      context: ./backend
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
@@ -21,12 +21,23 @@ services:
       - DATASOURCE_URL=jdbc:postgresql://host.docker.internal:5432/db_fleetlens
       - DATASOURCE_USERNAME=fleetlens_user
       - DATASOURCE_PASSWORD=fleetlens_password
-      - ADMIN_LASTNAME=ADMIN
-      - ADMIN_FIRSTNAME=Admin
-      - ADMIN_EMAIL=admin@admin.fr
-      - ADMIN_PASSWORD=admin
+    # - ADMIN_LASTNAME=ADMIN
+    # - ADMIN_FIRSTNAME=Admin
+    # - ADMIN_EMAIL=admin@admin.fr
+    # - ADMIN_PASSWORD=admin
     depends_on:
       - postgres
+    networks:
+      - fleetlens-network
+  frontend:
+    container_name: fleetlens-frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
     networks:
       - fleetlens-network
 volumes:
