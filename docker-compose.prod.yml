@@ -1,0 +1,70 @@
+services:
+  postgres:
+    image: postgres:17.2-alpine
+    container_name: postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-fleetlens_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-fleetlens_password}
+      POSTGRES_DB: ${POSTGRES_DB:-db_fleetlens}
+      PGDATA: /var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-fleetlens_user} -d ${POSTGRES_DB:-db_fleetlens}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - fleetlens-network
+
+  backend:
+    image: pitchouneee/fleetlens-backend:${VERSION:-latest}
+    container_name: fleetlens-backend
+    restart: unless-stopped
+    environment:
+      DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-db_fleetlens}
+      DATASOURCE_USERNAME: ${POSTGRES_USER:-fleetlens_user}
+      DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-fleetlens_password}
+      # ADMIN_LASTNAME: ${ADMIN_LASTNAME:-ADMIN}
+      # ADMIN_FIRSTNAME: ${ADMIN_FIRSTNAME:-Admin}
+      # ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@admin.fr}
+      # ADMIN_PASSWORD: ${ADMIN_PASSWORD:-admin}
+    ports:
+      - "8080:8080"
+    # depends_on:
+    #   postgres:
+    #     condition: service_healthy
+    # healthcheck:
+    #   test: ["CMD-SHELL", "wget -qO- http://localhost:8080/actuator/health || exit 1"]
+    #   interval: 15s
+    #   timeout: 5s
+    #   retries: 10
+    networks:
+      - fleetlens-network
+
+  frontend:
+    image: pitchouneee/fleetlens-frontend:${VERSION:-latest}
+    container_name: fleetlens-frontend
+    restart: unless-stopped
+    ports:
+      - "5173:80"
+    # depends_on:
+    #   backend:
+    #     condition: service_healthy
+    # healthcheck:
+    #   test: ["CMD-SHELL", "wget -qO- http://localhost:5173 || exit 1"]
+    #   interval: 15s
+    #   timeout: 5s
+    #   retries: 10
+    networks:
+      - fleetlens-network
+
+volumes:
+  postgres_data:
+
+networks:
+  fleetlens-network:
+    driver: bridge
