@@ -16,3 +16,9 @@ export function isAuthenticated(): boolean {
   return !!getToken();
 }
 
+export function logout(redirectTo: string = "/login"): void {
+  clearToken();
+  if (window.location.pathname !== redirectTo) {
+    window.location.href = redirectTo;
+  }
+}

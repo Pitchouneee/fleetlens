@@ -3,8 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
-import { 
+import {
   Table,
   TableBody,
   TableCell,
@@ -12,7 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { 
+import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -21,15 +20,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { 
-  Key, 
-  Plus, 
-  Copy,
-  Trash2,
-  Eye,
-  EyeOff,
-  MoreHorizontal
-} from "lucide-react";
+import { Key, Plus, MoreHorizontal, Trash2 } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -37,90 +28,96 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
+import { Badge } from "@/components/ui/badge";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import api from "@/lib/api";
+
+type ApiKeyItem = {
+  id: string;
+  name: string;
+  createdAt: string;
+  expiresAt?: string | null;
+  enabled: boolean;
+  lastUsedAt?: string | null;
+  preview: string;
+};
+
+type ApiKeyListResponse = {
+  content: ApiKeyItem[];
+  page: {
+    size: number;
+    number: number; // 0-based
+    totalElements: number;
+    totalPages: number;
+  };
+};
+
+const formatDate = (iso?: string | null) => {
+  if (!iso) return "—";
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "—";
+  return d.toLocaleString();
+};
 
 const APIKeys = () => {
-  const [showKey, setShowKey] = useState<{ [key: string]: boolean }>({});
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const [keyName, setKeyName] = useState("");
+  const [expiresAtLocal, setExpiresAtLocal] = useState<string>("");
+  const [createdPlainKey, setCreatedPlainKey] = useState<string | null>(null);
+  const [page, setPage] = useState(0);
+  const [size] = useState(20);
   const { toast } = useToast();
+  const queryClient = useQueryClient();
 
-  const apiKeys = [
-    {
-      id: "key-001",
-      name: "Production API",
-      key: "sk_live_51H7Q2BFZzV8Z7Q2B...",
-      created: "2024-01-15",
-      lastUsed: "2024-01-20",
-      status: "active"
+  const { data, isLoading, isError, refetch } = useQuery<ApiKeyListResponse>({
+    queryKey: ["apiKeys", page, size],
+    queryFn: async () => {
+      const res = await api.get("/admin/api-keys", { params: { page, size } });
+      return res.data as ApiKeyListResponse;
     },
-    {
-      id: "key-002", 
-      name: "Development",
-      key: "sk_test_51H7Q2BFZzV8Z7Q2B...",
-      created: "2024-01-10",
-      lastUsed: "2024-01-19",
-      status: "active"
+    placeholderData: (previousData) => previousData,
+    staleTime: 10000,
+  });
+
+  const createApiKey = useMutation({
+    mutationFn: async (payload: { name: string; expiresAt?: string }) => {
+      const res = await api.post("/admin/api-keys", payload);
+      return res.data as { plainKey?: string; key?: string; apiKey?: string };
     },
-    {
-      id: "key-003",
-      name: "Monitoring",
-      key: "sk_live_51H7Q2BFZzV8Z7Q2B...",
-      created: "2023-12-20",
-      lastUsed: "2024-01-18",
-      status: "inactive"
-    }
-  ];
+    onSuccess: (data) => {
+      const plain = (data as any)?.plainKey || (data as any)?.key || (data as any)?.apiKey;
+      if (plain) {
+        setCreatedPlainKey(plain);
+        toast({
+          title: "Clé créée",
+          description: "Copiez la clé maintenant, elle ne sera plus affichée.",
+        });
+      } else {
+        setIsCreateDialogOpen(false);
+        toast({ title: "Création réussie", description: "La clé a été créée." });
+      }
+      queryClient.invalidateQueries({ queryKey: ["apiKeys"] });
+    },
+    onError: (err: any) => {
+      const msg = err?.response?.data?.message || err?.message || "Échec de la création";
+      toast({ title: "Erreur", description: msg });
+    },
+  });
 
-  const toggleKeyVisibility = (keyId: string) => {
-    setShowKey(prev => ({
-      ...prev,
-      [keyId]: !prev[keyId]
-    }));
-  };
-
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
-    toast({
-      title: "Copié !",
-      description: "La clé API a été copiée dans le presse-papiers",
-    });
-  };
-
-  const toggleKeyStatus = (keyId: string) => {
-    // Ici on mettrait la logique pour changer le statut via l'API
-    toast({
-      title: "Statut modifié",
-      description: "Le statut de la clé API a été mis à jour",
-    });
-  };
-
-  const getStatusBadge = (status: string, keyId: string) => {
-    if (status === "active") {
-      return (
-        <Badge 
-          className="bg-success text-success-foreground cursor-pointer hover:opacity-80" 
-          onClick={() => toggleKeyStatus(keyId)}
-        >
-          Active
-        </Badge>
-      );
-    }
-    return (
-      <Badge 
-        variant="secondary" 
-        className="cursor-pointer hover:bg-muted"
-        onClick={() => toggleKeyStatus(keyId)}
-      >
-        Inactive
-      </Badge>
-    );
-  };
-
-  const formatKey = (key: string, keyId: string) => {
-    if (showKey[keyId]) {
-      return key;
-    }
-    return key.substring(0, 12) + "..." + key.substring(key.length - 8);
-  };
+  const revokeApiKey = useMutation({
+    mutationFn: async (id: string) => {
+      // Révocation: POST /admin/api-keys/{id}/revoke (correspond à /{id}/revoke)
+      await api.post(`/admin/api-keys/${encodeURIComponent(id)}/revoke`);
+    },
+    onSuccess: () => {
+      toast({ title: "Clé révoquée", description: "La clé a été révoquée." });
+      queryClient.invalidateQueries({ queryKey: ["apiKeys"] });
+    },
+    onError: (err: any) => {
+      const msg = err?.response?.data?.message || err?.message || "Échec de la révocation";
+      toast({ title: "Erreur", description: msg });
+    },
+  });
 
   return (
     <div className="space-y-6">
@@ -129,7 +126,17 @@ const APIKeys = () => {
           <h1 className="text-3xl font-bold tracking-tight">Clés API</h1>
           <p className="text-muted-foreground">Gérez vos clés d'accès à l'API</p>
         </div>
-        <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+        <Dialog
+          open={isCreateDialogOpen}
+          onOpenChange={(open) => {
+            setIsCreateDialogOpen(open);
+            if (!open) {
+              setKeyName("");
+              setExpiresAtLocal("");
+              setCreatedPlainKey(null);
+            }
+          }}
+        >
           <DialogTrigger asChild>
             <Button className="bg-gradient-primary hover:opacity-90">
               <Plus className="mr-2 h-4 w-4" />
@@ -139,36 +146,89 @@ const APIKeys = () => {
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Créer une nouvelle clé API</DialogTitle>
-              <DialogDescription>
-                Donnez un nom à votre clé API pour l'identifier facilement.
-              </DialogDescription>
+              {!createdPlainKey && (
+                <DialogDescription>Donnez un nom à votre clé API pour l'identifier facilement.</DialogDescription>
+              )}
             </DialogHeader>
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="keyName">Nom de la clé</Label>
-                <Input
-                  id="keyName"
-                  placeholder="Ex: Production API, Development..."
-                />
-              </div>
-            </div>
-            <DialogFooter>
-              <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
-                Annuler
-              </Button>
-              <Button onClick={() => setIsCreateDialogOpen(false)}>
-                Créer la clé
-              </Button>
-            </DialogFooter>
+
+            {!createdPlainKey ? (
+              <>
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="keyName">Nom de la clé</Label>
+                    <Input
+                      id="keyName"
+                      placeholder="Ex: Production, Développement..."
+                      value={keyName}
+                      onChange={(e) => setKeyName(e.target.value)}
+                      disabled={createApiKey.isPending}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="expiresAt">Expiration (optionnel)</Label>
+                    <Input
+                      id="expiresAt"
+                      type="datetime-local"
+                      value={expiresAtLocal}
+                      onChange={(e) => setExpiresAtLocal(e.target.value)}
+                      disabled={createApiKey.isPending}
+                    />
+                    <p className="text-xs text-muted-foreground">Laissez vide pour ne pas définir d'expiration.</p>
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)} disabled={createApiKey.isPending}>
+                    Annuler
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      const name = keyName.trim();
+                      if (!name) {
+                        toast({ title: "Nom requis", description: "Veuillez saisir un nom." });
+                        return;
+                      }
+                      const iso = expiresAtLocal ? new Date(expiresAtLocal).toISOString() : undefined;
+                      createApiKey.mutate({ name, expiresAt: iso });
+                    }}
+                    disabled={createApiKey.isPending}
+                  >
+                    {createApiKey.isPending ? "Création..." : "Créer la clé"}
+                  </Button>
+                </DialogFooter>
+              </>
+            ) : (
+              <>
+                <div className="space-y-4">
+                  <Label>Clé API (affichée une seule fois)</Label>
+                  <div className="flex items-center space-x-2">
+                    <code className="font-mono text-sm bg-accent px-2 py-1 rounded select-all">{createdPlainKey}</code>
+                    <Button variant="ghost" size="icon" onClick={() => navigator.clipboard.writeText(createdPlainKey)}>
+                      <Copy className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button
+                    onClick={() => {
+                      setIsCreateDialogOpen(false);
+                      setKeyName("");
+                      setCreatedPlainKey(null);
+                    }}
+                  >
+                    Fermer
+                  </Button>
+                </DialogFooter>
+              </>
+            )}
           </DialogContent>
         </Dialog>
       </div>
 
       <Card className="shadow-card">
         <CardHeader>
-          <CardTitle>Clés API actives</CardTitle>
+          <CardTitle>Clés API existantes</CardTitle>
           <CardDescription>
-            Utilisez ces clés pour accéder à l'API Fleetlens
+            {data?.page?.totalElements ?? 0} clés {isLoading ? "(chargement)" : "au total"}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -178,48 +238,34 @@ const APIKeys = () => {
                 <TableHead>Nom</TableHead>
                 <TableHead>Clé</TableHead>
                 <TableHead>Créée le</TableHead>
-                <TableHead>Dernière utilisation</TableHead>
+                <TableHead>Expire le</TableHead>
                 <TableHead>Statut</TableHead>
+                <TableHead>Dernière utilisation</TableHead>
                 <TableHead className="w-[50px]"></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {apiKeys.map((apiKey) => (
-                <TableRow key={apiKey.id} className="hover:bg-accent/50 transition-smooth">
+              {(data?.content ?? []).map((k) => (
+                <TableRow key={k.id} className="hover:bg-accent/50 transition-smooth">
                   <TableCell className="font-medium">
                     <div className="flex items-center space-x-2">
                       <Key className="h-4 w-4 text-muted-foreground" />
-                      <span>{apiKey.name}</span>
+                      <span>{k.name}</span>
                     </div>
                   </TableCell>
                   <TableCell>
-                    <div className="flex items-center space-x-2">
-                      <code className="font-mono text-sm bg-accent px-2 py-1 rounded">
-                        {formatKey(apiKey.key, apiKey.id)}
-                      </code>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => toggleKeyVisibility(apiKey.id)}
-                      >
-                        {showKey[apiKey.id] ? (
-                          <EyeOff className="h-4 w-4" />
-                        ) : (
-                          <Eye className="h-4 w-4" />
-                        )}
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => copyToClipboard(apiKey.key)}
-                      >
-                        <Copy className="h-4 w-4" />
-                      </Button>
-                    </div>
+                    <code className="font-mono text-sm bg-accent px-2 py-1 rounded">{k.preview ?? "—"}</code>
                   </TableCell>
-                  <TableCell>{apiKey.created}</TableCell>
-                  <TableCell>{apiKey.lastUsed}</TableCell>
-                  <TableCell>{getStatusBadge(apiKey.status, apiKey.id)}</TableCell>
+                  <TableCell>{formatDate(k.createdAt)}</TableCell>
+                  <TableCell>{formatDate(k.expiresAt)}</TableCell>
+                  <TableCell>
+                    {k.enabled ? (
+                      <Badge className="bg-success text-success-foreground">Activée</Badge>
+                    ) : (
+                      <Badge variant="secondary">Désactivée</Badge>
+                    )}
+                  </TableCell>
+                  <TableCell>{formatDate(k.lastUsedAt)}</TableCell>
                   <TableCell>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
@@ -228,16 +274,17 @@ const APIKeys = () => {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => copyToClipboard(apiKey.key)}>
-                          <Copy className="mr-2 h-4 w-4" />
-                          Copier
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => toggleKeyStatus(apiKey.id)}>
-                          {apiKey.status === "active" ? "Désactiver" : "Activer"}
-                        </DropdownMenuItem>
-                        <DropdownMenuItem className="text-destructive">
+                        <DropdownMenuItem
+                          className="text-destructive"
+                          disabled={!k.enabled || revokeApiKey.isPending}
+                          onClick={() => {
+                            if (!k.enabled || revokeApiKey.isPending) return;
+                            const ok = window.confirm(`Révoquer la clé "${k.name}" ? Cette action est définitive.`);
+                            if (ok) revokeApiKey.mutate(k.id);
+                          }}
+                        >
                           <Trash2 className="mr-2 h-4 w-4" />
-                          Supprimer
+                          Révoquer
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -246,35 +293,31 @@ const APIKeys = () => {
               ))}
             </TableBody>
           </Table>
-        </CardContent>
-      </Card>
-
-      <Card className="shadow-card">
-        <CardHeader>
-          <CardTitle>Documentation API</CardTitle>
-          <CardDescription>
-            Comment utiliser vos clés API avec Fleetlens
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div>
-            <h4 className="font-medium mb-2">Authentification</h4>
-            <code className="text-sm bg-accent p-3 rounded block">
-              curl -H "Authorization: Bearer YOUR_API_KEY" https://api.Fleetlens.com/v1/vms
-            </code>
-          </div>
-          <div>
-            <h4 className="font-medium mb-2">Exemple de requête</h4>
-            <code className="text-sm bg-accent p-3 rounded block">
-              {`{
-  "method": "GET",
-  "url": "https://api.Fleetlens.com/v1/vms",
-  "headers": {
-    "Authorization": "Bearer YOUR_API_KEY",
-    "Content-Type": "application/json"
-  }
-}`}
-            </code>
+          <div className="flex items-center justify-between mt-6">
+            <p className="text-sm text-muted-foreground">
+              Page {(data?.page?.number ?? page) + 1} sur {data?.page?.totalPages ?? 1} — {data?.page?.totalElements ?? 0} résultats
+            </p>
+            <div className="flex items-center space-x-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setPage(Math.max(0, page - 1))}
+                disabled={(data?.page?.number ?? page) === 0 || isLoading}
+              >
+                Précédent
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setPage(Math.min((data?.page?.totalPages ?? 1) - 1, page + 1))}
+                disabled={((data?.page?.number ?? page) + 1) === (data?.page?.totalPages ?? 1) || isLoading}
+              >
+                Suivant
+              </Button>
+              {isError && (
+                <Button variant="destructive" size="sm" onClick={() => refetch()}>Réessayer</Button>
+              )}
+            </div>
           </div>
         </CardContent>
       </Card>

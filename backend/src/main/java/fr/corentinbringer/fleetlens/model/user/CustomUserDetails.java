@@ -1,4 +1,4 @@
-package fr.corentinbringer.fleetlens.model;
+package fr.corentinbringer.fleetlens.model.user;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

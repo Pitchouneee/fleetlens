@@ -1,4 +1,4 @@
-package fr.corentinbringer.fleetlens.model;
+package fr.corentinbringer.fleetlens.model.virtualmachine;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

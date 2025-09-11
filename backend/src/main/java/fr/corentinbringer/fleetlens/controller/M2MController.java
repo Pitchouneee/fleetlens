@@ -1,8 +1,8 @@
 package fr.corentinbringer.fleetlens.controller;
 
-import fr.corentinbringer.fleetlens.model.UpsertOutcome;
-import fr.corentinbringer.fleetlens.model.VmIngestRequest;
-import fr.corentinbringer.fleetlens.service.VmIngestionService;
+import fr.corentinbringer.fleetlens.model.virtualmachine.UpsertOutcome;
+import fr.corentinbringer.fleetlens.model.virtualmachine.VmIngestRequest;
+import fr.corentinbringer.fleetlens.service.VirtualMachineService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,11 +19,11 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class M2MController {
 
-    private final VmIngestionService vmIngestionService;
+    private final VirtualMachineService virtualMachineService;
 
     @PutMapping("/v1/ingest")
     public ResponseEntity<Map<String, Object>> putSingle(@Valid @RequestBody VmIngestRequest dto) {
-        UpsertOutcome outcome = vmIngestionService.upsert(dto);
+        UpsertOutcome outcome = virtualMachineService.upsert(dto);
 
         URI self = URI.create("/m2m/v1/ingest/");
         Map<String, Object> payload = Map.of(

@@ -1,22 +1,23 @@
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { 
-  LayoutDashboard, 
-  Server, 
-  Key, 
+import {
+  LayoutDashboard,
+  Server,
+  Key,
   Users,
   User,
   Package,
   Shield,
-  LogOut
+  LogOut,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
+import { logout } from "@/lib/auth";
 
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { name: "Machines Virtuelles", href: "/vms", icon: Server },
-  { name: "Comptes", href: "/accounts", icon: User },
-  { name: "Logiciels", href: "/software", icon: Package },
+  // { name: "Comptes", href: "/accounts", icon: User },
+  // { name: "Logiciels", href: "/software", icon: Package },
   { name: "Clés API", href: "/api-keys", icon: Key },
   { name: "Utilisateurs", href: "/users", icon: Users },
 ];
@@ -56,7 +57,11 @@ export const Sidebar = () => {
       </nav>
 
       <div className="p-4 border-t border-border">
-        <Button variant="ghost" className="w-full justify-start text-muted-foreground hover:text-destructive transition-smooth">
+        <Button
+          variant="ghost"
+          className="w-full justify-start text-muted-foreground hover:text-destructive transition-smooth"
+          onClick={() => logout("/login")}
+        >
           <LogOut className="mr-3 h-4 w-4" />
           Déconnexion
         </Button>
@@ -64,3 +69,4 @@ export const Sidebar = () => {
     </div>
   );
 };
+

@@ -1,6 +1,6 @@
 package fr.corentinbringer.fleetlens.service;
 
-import fr.corentinbringer.fleetlens.model.CustomUserDetails;
+import fr.corentinbringer.fleetlens.model.user.CustomUserDetails;
 import fr.corentinbringer.fleetlens.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;

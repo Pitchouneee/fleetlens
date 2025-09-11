@@ -9,13 +9,14 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import VMs from "./pages/VMs";
 import VMDetails from "./pages/VMDetails";
-import Accounts from "./pages/Accounts";
-import Software from "./pages/Software";
+// import Accounts from "./pages/Accounts";
+// import Software from "./pages/Software";
 import APIKeys from "./pages/APIKeys";
 import Users from "./pages/Users";
 import EditUser from "./pages/EditUser";
 import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
+import Logout from "./pages/Logout";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +28,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route path="/logout" element={<Logout />} />
           <Route path="/" element={
             <RequireAuth>
               <DashboardLayout>
@@ -55,7 +57,7 @@ const App = () => (
               </DashboardLayout>
             </RequireAuth>
           } />
-          <Route path="/accounts" element={
+          {/* <Route path="/accounts" element={
             <RequireAuth>
               <DashboardLayout>
                 <Accounts />
@@ -68,7 +70,7 @@ const App = () => (
                 <Software />
               </DashboardLayout>
             </RequireAuth>
-          } />
+          } /> */}
           <Route path="/api-keys" element={
             <RequireAuth>
               <DashboardLayout>

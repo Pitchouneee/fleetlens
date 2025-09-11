@@ -1,4 +1,4 @@
-package fr.corentinbringer.fleetlens.model;
+package fr.corentinbringer.fleetlens.model.apikey;
 
 import jakarta.validation.constraints.NotBlank;
 

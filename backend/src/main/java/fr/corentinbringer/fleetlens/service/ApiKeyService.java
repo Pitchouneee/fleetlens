@@ -1,11 +1,15 @@
 package fr.corentinbringer.fleetlens.service;
 
-import fr.corentinbringer.fleetlens.model.ApiKey;
-import fr.corentinbringer.fleetlens.model.ApiKeyResponse;
+import fr.corentinbringer.fleetlens.exception.ResourceNotFoundException;
+import fr.corentinbringer.fleetlens.model.apikey.ApiKey;
+import fr.corentinbringer.fleetlens.model.apikey.ApiKeyList;
+import fr.corentinbringer.fleetlens.model.apikey.ApiKeyResponse;
 import fr.corentinbringer.fleetlens.repository.ApiKeyRepository;
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
@@ -69,5 +73,21 @@ public class ApiKeyService {
 
     private String peppered(String key) {
         return pepper == null ? key : key + pepper;
+    }
+
+    public Page<ApiKeyList> list(Pageable pageable) {
+        return apiKeyRepository.findBy(pageable);
+    }
+
+    public void revoke(UUID id) {
+        ApiKey key = apiKeyRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("API key not found"));
+
+        if (!key.isEnabled()) {
+            return;
+        }
+
+        key.setEnabled(false);
+        apiKeyRepository.save(key);
     }
 }

@@ -1,4 +1,4 @@
-package fr.corentinbringer.fleetlens.model;
+package fr.corentinbringer.fleetlens.model.virtualmachine;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -8,6 +8,7 @@ import java.util.UUID;
 
 @Getter
 @Setter
+@Entity
 @Table(name = "vm_open_port", uniqueConstraints = @UniqueConstraint(
         name = "uq_vop_vm_port_proto", columnNames = {"vm_id", "port", "protocol"})
 )
@@ -19,7 +20,7 @@ public class VmOpenPort {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vm_id", nullable = false)
-    private VmMachine vm;
+    private VirtualMachine vm;
 
     private int port;
 

@@ -92,11 +92,6 @@ const Login = () => {
               {loading ? "Connexion..." : "Se connecter"}
             </Button>
           </form>
-          <div className="text-center">
-            <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-smooth">
-              Mot de passe oublié ?
-            </a>
-          </div>
         </CardContent>
       </Card>
     </div>

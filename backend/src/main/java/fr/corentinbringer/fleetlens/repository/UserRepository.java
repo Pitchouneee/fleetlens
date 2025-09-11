@@ -1,6 +1,6 @@
 package fr.corentinbringer.fleetlens.repository;
 
-import fr.corentinbringer.fleetlens.model.User;
+import fr.corentinbringer.fleetlens.model.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,32 +1,29 @@
 package fr.corentinbringer.fleetlens.service;
 
-import fr.corentinbringer.fleetlens.model.*;
-import fr.corentinbringer.fleetlens.repository.VmMachineRepository;
+import fr.corentinbringer.fleetlens.model.virtualmachine.*;
+import fr.corentinbringer.fleetlens.repository.VirtualMachineRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Locale;
 
 @Service
 @RequiredArgsConstructor
-public class VmIngestionService {
+public class VirtualMachineService {
 
-    private final VmMachineRepository vmMachineRepository;
+    private final VirtualMachineRepository virtualMachineRepository;
 
     @Transactional
     public UpsertOutcome upsert(VmIngestRequest dto) {
-//        VmMachine vm = vmMachineRepository.findByHostname(dto.hostname()).orElseGet(() -> {
-//            VmMachine fresh = new VmMachine();
-//            fresh.setHostname(dto.hostname());
-//            return fresh;
-//        });
-
-        VmMachine vm = vmMachineRepository.findByHostname(dto.hostname()).orElse(null);
+        VirtualMachine vm = virtualMachineRepository.findByHostname(dto.hostname()).orElse(null);
         boolean created = (vm == null);
         if (created) {
-            vm = new VmMachine();
+            vm = new VirtualMachine();
             vm.setHostname(dto.hostname());
         }
 
@@ -56,17 +53,17 @@ public class VmIngestionService {
             List<VmOpenPort> mapped = dto.openPorts().stream().map(p -> {
                 VmOpenPort e = new VmOpenPort();
                 e.setPort(p.port());
-                e.setProtocol(VmOpenPort.Protocol.valueOf(p.protocol().toLowerCase()));
+                e.setProtocol(VmOpenPort.Protocol.valueOf(p.protocol().toUpperCase(Locale.ROOT)));
                 return e;
             }).toList();
             vm.replaceOpenPorts(mapped);
         }
 
         try {
-            var saved = vmMachineRepository.saveAndFlush(vm);
+            var saved = virtualMachineRepository.saveAndFlush(vm);
             return new UpsertOutcome(created, saved.getId());
         } catch (DataIntegrityViolationException dup) {
-            VmMachine existing = vmMachineRepository.findByHostname(dto.hostname())
+            VirtualMachine existing = virtualMachineRepository.findByHostname(dto.hostname())
                     .orElseThrow(() -> dup);
 
             existing.setHostname(vm.getHostname());
@@ -82,20 +79,12 @@ public class VmIngestionService {
             existing.replaceInterfaces(vm.getNetworkInterfaces());
             existing.replaceOpenPorts(vm.getOpenPorts());
 
-            var saved = vmMachineRepository.save(existing);
+            var saved = virtualMachineRepository.save(existing);
             return new UpsertOutcome(false, saved.getId());
         }
     }
 
-//    @Transactional
-//    public List<VmMachine> upsertBatch(List<VmIngestRequest> dtos) {
-//        // Transaction par requête; si tu préfères isoler par VM, traite par morceaux
-//        List<VmMachine> res = new ArrayList<>(dtos.size());
-//
-//        for (var dto : dtos) {
-//            res.add(upsert(dto));
-//        }
-//
-//        return res;
-//    }
+    public Page<VmList> list(Pageable pageable) {
+        return virtualMachineRepository.findBy(pageable);
+    }
 }

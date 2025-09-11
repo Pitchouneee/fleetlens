@@ -1,4 +1,4 @@
-package fr.corentinbringer.fleetlens.model;
+package fr.corentinbringer.fleetlens.model.virtualmachine;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -8,6 +8,7 @@ import java.util.UUID;
 
 @Getter
 @Setter
+@Entity
 @Table(name = "vm_network_interface", uniqueConstraints = @UniqueConstraint(
         name = "uq_vni_vm_name", columnNames = {"vm_id", "name"})
 )
@@ -19,8 +20,9 @@ public class VmNetworkInterface {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vm_id", nullable = false)
-    private VmMachine vm;
+    private VirtualMachine vm;
 
+    @Column(nullable = false)
     private String name;
 
     @Column(name = "ip_address")

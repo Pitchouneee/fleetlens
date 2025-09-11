@@ -9,16 +9,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Link, useNavigate } from "react-router-dom";
-import { clearToken } from "@/lib/auth";
+import { Link } from "react-router-dom";
+import { logout } from "@/lib/auth";
 
 export const Header = () => {
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    clearToken();
-    navigate("/login", { replace: true });
-  };
+  const handleLogout = () => logout("/login");
 
   return (
     <header className="h-16 border-b border-border bg-card/50 backdrop-blur-sm flex items-center justify-between px-6">
@@ -60,4 +55,3 @@ export const Header = () => {
     </header>
   );
 };
-
