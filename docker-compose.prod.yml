@@ -49,6 +49,8 @@ services:
     image: pitchouneee/fleetlens-frontend:${VERSION:-latest}
     container_name: fleetlens-frontend
     restart: unless-stopped
+    environment:
+      APP_API_BASE_URL: http://localhost:8080
     ports:
       - "5173:80"
     # depends_on:
