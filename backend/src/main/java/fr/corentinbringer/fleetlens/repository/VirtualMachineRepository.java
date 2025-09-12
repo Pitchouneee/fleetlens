@@ -1,6 +1,7 @@
 package fr.corentinbringer.fleetlens.repository;
 
 import fr.corentinbringer.fleetlens.model.virtualmachine.VirtualMachine;
+import fr.corentinbringer.fleetlens.model.virtualmachine.VmDetailResponse;
 import fr.corentinbringer.fleetlens.model.virtualmachine.VmList;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,4 +17,6 @@ public interface VirtualMachineRepository extends JpaRepository<VirtualMachine, 
     Optional<VirtualMachine> findByHostname(String hostname);
 
     Page<VmList> findBy(Pageable pageable);
+
+    Optional<VmDetailResponse> findProjectionById(UUID id);
 }

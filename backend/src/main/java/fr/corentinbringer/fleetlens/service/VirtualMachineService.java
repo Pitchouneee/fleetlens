@@ -1,5 +1,6 @@
 package fr.corentinbringer.fleetlens.service;
 
+import fr.corentinbringer.fleetlens.exception.ResourceNotFoundException;
 import fr.corentinbringer.fleetlens.model.virtualmachine.*;
 import fr.corentinbringer.fleetlens.repository.VirtualMachineRepository;
 import jakarta.transaction.Transactional;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -86,5 +88,10 @@ public class VirtualMachineService {
 
     public Page<VmList> list(Pageable pageable) {
         return virtualMachineRepository.findBy(pageable);
+    }
+
+    public VmDetailResponse getVmDetails(UUID id) {
+        return virtualMachineRepository.findProjectionById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Virtual machine not found"));
     }
 }
